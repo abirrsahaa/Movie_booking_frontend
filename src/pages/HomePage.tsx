@@ -26,20 +26,40 @@ const HomePage = () => {
   // State for movies and upcoming movies
   // in the backend i will have to have a response dto for this type of data
   const [nowShowing, setNowShowing] = useState<Movie[]>([
-    { id: 1, title: 'Oppenheimer', image: '/movies/oppenheimer.jpg', type: 'IMAX', isNew: true },
-    { id: 2, title: 'Barbie', image: '/movies/barbie.jpg', type: 'DOLBY', isNew: true },
-    { id: 3, title: 'Mission Impossible', image: '/movies/mission.jpg', type: 'DIGITAL' },
-    { id: 4, title: 'Ant Man', image: '/movies/antman.jpg', type: 'IMAX', isNew: true },
-    { id: 5, title: 'John Wick', image: '/movies/johnwick.jpg', type: 'DOLBY', isNew: true },
+    // { id: 1, title: 'Oppenheimer', image: '/movies/oppenheimer.jpg', type: 'IMAX', isNew: true },
+    // { id: 2, title: 'Barbie', image: '/movies/barbie.jpg', type: 'DOLBY', isNew: true },
+    // { id: 3, title: 'Mission Impossible', image: '/movies/mission.jpg', type: 'DIGITAL' },
+    // { id: 4, title: 'Ant Man', image: '/movies/antman.jpg', type: 'IMAX', isNew: true },
+    // { id: 5, title: 'John Wick', image: '/movies/johnwick.jpg', type: 'DOLBY', isNew: true },
   ]);
+
+  useEffect(()=>{
+    const getting=async ()=>{const getting=await axios.get("http://localhost:9090/nowShowing");
+    console.log(getting.data);
+    setNowShowing(getting.data);
+    }
+    getting();
+
+  },[])
 
   // in the backend i will have to have a response dto for this type of data
   const [comingSoon, setComingSoon] = useState<Movie[]>([
-    { id: 6, title: 'Deadpool 3', image: '/movies/deadpool3.jpg', type: 'IMAX' },
-    { id: 7, title: 'Dune 2', image: '/movies/dune2.jpg', type: 'DOLBY' },
-    { id: 8, title: 'Fast X', image: '/movies/fastx.jpg', type: 'DIGITAL' },
-    { id: 9, title: 'The Marvels', image: '/movies/marvels.jpg', type: 'IMAX' },
+    // { id: 6, title: 'Deadpool 3', image: '/movies/deadpool3.jpg', type: 'IMAX' },
+    // { id: 7, title: 'Dune 2', image: '/movies/dune2.jpg', type: 'DOLBY' },
+    // { id: 8, title: 'Fast X', image: '/movies/fastx.jpg', type: 'DIGITAL' },
+    // { id: 9, title: 'The Marvels', image: '/movies/marvels.jpg', type: 'IMAX' },
   ]);
+
+  useEffect(()=>{
+    const getting=async ()=>{const getting=await axios.get("http://localhost:9090/comingSoon");
+    console.log(getting.data);
+    setComingSoon(getting.data);
+    }
+    getting();
+
+  },[])
+
+
 
   const [offers, setOffers] = useState<PromoOffer[]>([
     { 
@@ -111,74 +131,89 @@ const HomePage = () => {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Hero Section with Parallax */}
       <section 
-        className="relative h-[500px] overflow-hidden"
-        style={{
-          backgroundImage: "url('/hero-bg.jpg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center"
-        }}
-      >
-        <div
-          className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/50"
-          style={{ transform: `translateY(${scrollY * 0.3}px)` }}
-        />
-        
-        <div className="container mx-auto px-4 relative z-10 h-full flex flex-col justify-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="max-w-2xl"
-          >
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">Latest Movie Banner</h1>
-            <p className="text-xl text-gray-200 mb-8">Experience the magic of cinema with our premium booking experience</p>
-            <div className="flex flex-wrap gap-4">
-              <Button size="lg" className="bg-red-600 hover:bg-red-700">Book Tickets</Button>
-              <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10">Watch Trailer</Button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+  className="relative h-[600px] overflow-hidden"
+  style={{
+    backgroundImage: "url('https://th.bing.com/th/id/OIP.7aT2h0InAIIrDDSkHf2lwgHaEK?rs=1&pid=ImgDetMain')", // Oppenheimer's banner
+    backgroundSize: "cover",
+    backgroundPosition: "center"
+  }}
+>
+  <div
+    className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/50"
+    style={{ transform: `translateY(${scrollY * 0.3}px)` }}
+  />
+  
+  <div className="container mx-auto px-4 relative z-10 h-full flex flex-col justify-center">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8 }}
+      className="max-w-3xl"
+    >
+      <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">Oppenheimer</h1>
+      <p className="text-lg md:text-2xl text-gray-200 mb-8">
+        The story of American scientist J. Robert Oppenheimer and his role in the development of the atomic bomb.
+      </p>
+      <div className="flex flex-wrap gap-4">
+        <Button size="lg" className="bg-red-600 hover:bg-red-700">
+          Book Tickets
+        </Button>
+        <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10">
+          Watch Trailer
+        </Button>
+      </div>
+    </motion.div>
+  </div>
+</section>
 
       {/* Now Showing Movies */}
       <section className="py-12 container mx-auto px-4">
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-3xl font-bold dark:text-white">Now Showing</h2>
-          <Button variant="ghost" className="text-sm">View All</Button>
-        </div>
+  <div className="flex justify-between items-center mb-8">
+    <h2 className="text-3xl font-bold dark:text-white">Now Showing</h2>
+    <Button variant="ghost" className="text-sm">View All</Button>
+  </div>
 
-        <motion.div 
-  variants={containerVariants}
-  initial="hidden"
-  whileInView="visible"
-  viewport={{ once: false, amount: 0.2 }} // Trigger animation every time the element is in view
-  className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6"
->
-  {nowShowing.map((movie) => (
-    <motion.div key={movie.id} variants={itemVariants}>
-      <Card className="overflow-hidden h-full transition-all hover:shadow-lg group dark:bg-gray-800">
-        <div className="relative aspect-[2/3] bg-gray-100 dark:bg-gray-700">
-          {movie.isNew && (
-            <Badge className="absolute top-2 right-2 bg-yellow-400 text-black">NEW</Badge>
-          )}
-          <div className="w-full h-full flex items-center justify-center text-gray-400">
-            {movie.title}
-          </div>
-        </div>
-        <CardContent className="p-4">
-          <div className="flex justify-between items-start mb-2">
-            <h3 className="font-semibold dark:text-white">{movie.title}</h3>
-            <Badge variant="outline" className="text-xs">{movie.type}</Badge>
-          </div>
-          <div className="mt-4">
-            <Button size="sm" className="w-full bg-red-600 hover:bg-red-700">Book</Button>
-          </div>
-        </CardContent>
-      </Card>
+  {nowShowing.length === 0 ? (
+    // Show a loading spinner or a placeholder when data is being fetched
+    <div className="flex justify-center items-center h-64">
+      <p className="text-gray-500 dark:text-gray-400">Loading movies...</p>
+    </div>
+  ) : (
+    <motion.div 
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: false, amount: 0.2 }} // Trigger animation every time the element is in view
+      className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6"
+    >
+      {nowShowing.map((movie) => (
+        <motion.div key={movie.id} variants={itemVariants}>
+          <Card className="overflow-hidden h-full transition-all hover:shadow-lg group dark:bg-gray-800">
+            <div className="relative aspect-[2/3] bg-gray-100 dark:bg-gray-700">
+              {movie.isNew && (
+                <Badge className="absolute top-2 right-2 bg-yellow-400 text-black">NEW</Badge>
+              )}
+              <img
+                src={movie.image}
+                alt={movie.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <CardContent className="p-4">
+              <div className="flex justify-between items-start mb-2">
+                <h3 className="font-semibold dark:text-white">{movie.title}</h3>
+                <Badge variant="outline" className="text-xs">{movie.type}</Badge>
+              </div>
+              <div className="mt-4">
+                <Button size="sm" className="w-full bg-red-600 hover:bg-red-700">Book</Button>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      ))}
     </motion.div>
-  ))}
-</motion.div>
-      </section>
+  )}
+</section>
 
       {/* Coming Soon */}
       <section className="py-12 container mx-auto px-4 bg-gray-100 dark:bg-gray-800/50">
@@ -187,33 +222,42 @@ const HomePage = () => {
     <Button variant="ghost" className="text-sm">View All</Button>
   </div>
 
-  <motion.div 
-    variants={containerVariants} // Parent animation for staggered children
-    initial="hidden"
-    whileInView="visible"
-    viewport={{ once: false, amount: 0.2 }} // Trigger animation every time the section is in view
-    className="grid grid-cols-2 md:grid-cols-4 gap-6"
-  >
-    {comingSoon.map((movie) => (
-      <motion.div key={movie.id} variants={itemVariants}> {/* Child animation */}
-        <Card className="overflow-hidden h-full transition-all hover:shadow-lg group dark:bg-gray-800">
-          <div className="relative aspect-[2/3] bg-gray-200 dark:bg-gray-700">
-            <Badge className="absolute top-2 right-2 bg-blue-500">SOON</Badge>
-            <div className="w-full h-full flex items-center justify-center text-gray-400">
-              {movie.title}
+  {comingSoon.length === 0 ? (
+    // Show a loading spinner or a placeholder when data is being fetched
+    <div className="flex justify-center items-center h-64">
+      <p className="text-gray-500 dark:text-gray-400">Loading upcoming movies...</p>
+    </div>
+  ) : (
+    <motion.div 
+      variants={containerVariants} // Parent animation for staggered children
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: false, amount: 0.2 }} // Trigger animation every time the section is in view
+      className="grid grid-cols-2 md:grid-cols-4 gap-6"
+    >
+      {comingSoon.map((movie) => (
+        <motion.div key={movie.id} variants={itemVariants}> {/* Child animation */}
+          <Card className="overflow-hidden h-full transition-all hover:shadow-lg group dark:bg-gray-800">
+            <div className="relative aspect-[2/3] bg-gray-200 dark:bg-gray-700">
+              <Badge className="absolute top-2 right-2 bg-blue-500">SOON</Badge>
+              <img
+                src={movie.image}
+                alt={movie.title}
+                className="w-full h-full object-cover"
+              />
             </div>
-          </div>
-          <CardContent className="p-4">
-            <h3 className="font-semibold dark:text-white">{movie.title}</h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400">{movie.type}</p>
-            <div className="mt-4">
-              <Button size="sm" variant="outline" className="w-full">Notify Me</Button>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-    ))}
-  </motion.div>
+            <CardContent className="p-4">
+              <h3 className="font-semibold dark:text-white">{movie.title}</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{movie.type}</p>
+              <div className="mt-4">
+                <Button size="sm" variant="outline" className="w-full">Notify Me</Button>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      ))}
+    </motion.div>
+  )}
 </section>
       {/* Browse by Category */}
       <section className="py-12 container mx-auto px-4">
