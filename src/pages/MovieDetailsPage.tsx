@@ -15,6 +15,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import axios from 'axios';
 
 
 export interface Movie {
@@ -101,6 +102,12 @@ const SeatSelectionComponent: React.FC<SeatSelectionProps> = ({
   
   // Mock seat data
   useEffect(() => {
+
+    const aesehi=async ()=>{
+      const getting=await axios.get("http://localhost:9090/hello");
+      console.log(getting.data);
+    }
+    aesehi();
     if (open) {
       const generateSeats = () => {
         const sections = ['Premium', 'Executive', 'Standard'];

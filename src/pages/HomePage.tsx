@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import axios from "axios";
 
 // Types
 interface Movie {
@@ -94,6 +95,11 @@ const HomePage = () => {
   const [scrollY, setScrollY] = useState(0);
   
   useEffect(() => {
+    const aesehi=async ()=>{
+      const getting=await axios.get("http://localhost:9090/hello");
+      console.log(getting.data);
+    }
+    aesehi();
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
