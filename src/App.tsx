@@ -3,7 +3,7 @@ import RootLayout from './layouts/RootLayout';
 import HomePage from './pages/HomePage';
 import MoviesPage from './pages/MoviesPage';
 import TheatresPage from './pages/TheatrePage';
-import BookingsPage from './pages/BookingPage';
+import BookingsPage from './pages/MyBookings';
 import MovieDetailsPage, { Cinema, Movie, Offer, Review } from './pages/MovieDetailsPage';
 
 const movie: Movie = {
@@ -118,15 +118,21 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<RootLayout />}>
+
           <Route index element={<HomePage />} />
+
           <Route path="movies" element={<MoviesPage />} />
+
           <Route path="moviesSpecific" element={<MovieDetailsPage movie={movie}
                 dates={dates}
                 cinemas={cinemas}
                 reviews={reviews}
                 offers={offers} />} />
+
           <Route path="theatres" element={<TheatresPage />} />
+
           <Route path="bookings" element={<BookingsPage />} />
+
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>

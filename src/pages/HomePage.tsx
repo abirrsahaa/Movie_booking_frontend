@@ -296,68 +296,193 @@ const HomePage = () => {
 
       {/* Quick Links */}
       <section className="py-12 container mx-auto px-4">
-        <h2 className="text-3xl font-bold mb-8 dark:text-white">Quick Links</h2>
-        
-        <motion.div
-          variants={fadeInVariants}
+  <h2 className="text-3xl font-bold mb-8 dark:text-white">Quick Links</h2>
+  
+  <motion.div
+    variants={fadeInVariants}
+    initial="hidden"
+    whileInView="visible"
+    viewport={{ once: false, amount: 0.2 }}
+  >
+    <Tabs defaultValue="current" className="w-full">
+      <TabsList className="mb-6 w-full sm:w-auto flex flex-wrap">
+        {/* <TabsTrigger value="current">Current Movies</TabsTrigger> */}
+        <TabsTrigger value="latest">Latest Releases</TabsTrigger>
+        <TabsTrigger value="theaters">Movie Theaters</TabsTrigger>
+        <TabsTrigger value="upcoming">Upcoming Movies</TabsTrigger>
+        <TabsTrigger value="gift">Gift Cards</TabsTrigger>
+        <TabsTrigger value="offers">Offers</TabsTrigger>
+      </TabsList>
+      
+      {/* <TabsContent value="current" className="mt-0">
+        <motion.div 
+          className="grid grid-cols-2 md:grid-cols-4 gap-6"
+          variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: false, amount: 0.2 }}
         >
-          <Tabs defaultValue="current" className="w-full">
-            <TabsList className="mb-6 w-full sm:w-auto flex flex-wrap">
-              <TabsTrigger value="current">Current Movies</TabsTrigger>
-              <TabsTrigger value="latest">Latest Releases</TabsTrigger>
-              <TabsTrigger value="theaters">Movie Theaters</TabsTrigger>
-              <TabsTrigger value="upcoming">Upcoming Movies</TabsTrigger>
-              <TabsTrigger value="gift">Gift Cards</TabsTrigger>
-              <TabsTrigger value="offers">Offers</TabsTrigger>
-            </TabsList>
-            <TabsContent value="current" className="mt-0">
-              <Card>
-                <CardContent className="p-6">
-                  <p className="text-gray-600 dark:text-gray-300">Find all the currently playing movies across theaters in your city.</p>
+          {nowShowing.map((movie) => (
+            <motion.div key={movie.id} variants={itemVariants}>
+              <Card className="overflow-hidden h-full transition-all hover:shadow-lg group dark:bg-gray-800">
+                <div className="relative aspect-[2/3] bg-gray-100 dark:bg-gray-700">
+                  {movie.isNew && (
+                    <Badge className="absolute top-2 right-2 bg-yellow-400 text-black">NEW</Badge>
+                  )}
+                  <img src={movie.image} alt={movie.title} className="w-full h-full object-cover" />
+                </div>
+                <CardContent className="p-4">
+                  <h3 className="font-semibold dark:text-white">{movie.title}</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{movie.type}</p>
+                  <div className="mt-4">
+                    <Button size="sm" className="w-full bg-red-600 hover:bg-red-700">Book</Button>
+                  </div>
                 </CardContent>
               </Card>
-            </TabsContent>
-            <TabsContent value="latest" className="mt-0">
-              <Card>
-                <CardContent className="p-6">
-                  <p className="text-gray-600 dark:text-gray-300">Explore the newest movie releases this week.</p>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            <TabsContent value="theaters" className="mt-0">
-              <Card>
-                <CardContent className="p-6">
-                  <p className="text-gray-600 dark:text-gray-300">Find theaters near you with IMAX, Dolby, and other premium formats.</p>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            <TabsContent value="upcoming" className="mt-0">
-              <Card>
-                <CardContent className="p-6">
-                  <p className="text-gray-600 dark:text-gray-300">Get a sneak peek at movies coming soon to theaters.</p>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            <TabsContent value="gift" className="mt-0">
-              <Card>
-                <CardContent className="p-6">
-                  <p className="text-gray-600 dark:text-gray-300">Give the gift of movies with our digital gift cards.</p>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            <TabsContent value="offers" className="mt-0">
-              <Card>
-                <CardContent className="p-6">
-                  <p className="text-gray-600 dark:text-gray-300">Find all current promotions and special deals for movie tickets.</p>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+            </motion.div>
+          ))}
         </motion.div>
-      </section>
+      </TabsContent> */}
+      
+      <TabsContent value="latest" className="mt-0">
+        <motion.div 
+          className="grid grid-cols-2 md:grid-cols-4 gap-6"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.2 }}
+        >
+          {comingSoon.map((movie) => (
+            <motion.div key={movie.id} variants={itemVariants}>
+              <Card className="overflow-hidden h-full transition-all hover:shadow-lg group dark:bg-gray-800">
+                <div className="relative aspect-[2/3] bg-gray-200 dark:bg-gray-700">
+                  <Badge className="absolute top-2 right-2 bg-blue-500">SOON</Badge>
+                  <img src={movie.image} alt={movie.title} className="w-full h-full object-cover" />
+                </div>
+                <CardContent className="p-4">
+                  <h3 className="font-semibold dark:text-white">{movie.title}</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{movie.type}</p>
+                  <div className="mt-4">
+                    <Button size="sm" variant="outline" className="w-full">Notify Me</Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </motion.div>
+      </TabsContent>
+      
+      <TabsContent value="theaters" className="mt-0">
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.2 }}
+        >
+          <motion.div variants={itemVariants}>
+            <Card className="overflow-hidden h-full transition-all hover:shadow-lg group dark:bg-gray-800">
+              <CardContent className="p-6">
+                <h3 className="font-semibold dark:text-white">IMAX Theaters</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Experience movies in IMAX format.</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+          <motion.div variants={itemVariants}>
+            <Card className="overflow-hidden h-full transition-all hover:shadow-lg group dark:bg-gray-800">
+              <CardContent className="p-6">
+                <h3 className="font-semibold dark:text-white">Dolby Cinema</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Enjoy movies with Dolby sound and visuals.</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </motion.div>
+      </TabsContent>
+      
+      <TabsContent value="upcoming" className="mt-0">
+        <motion.div 
+          className="grid grid-cols-2 md:grid-cols-4 gap-6"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.2 }}
+        >
+          {comingSoon.map((movie) => (
+            <motion.div key={movie.id} variants={itemVariants}>
+              <Card className="overflow-hidden h-full transition-all hover:shadow-lg group dark:bg-gray-800">
+                <div className="relative aspect-[2/3] bg-gray-200 dark:bg-gray-700">
+                  <Badge className="absolute top-2 right-2 bg-blue-500">SOON</Badge>
+                  <img src={movie.image} alt={movie.title} className="w-full h-full object-cover" />
+                </div>
+                <CardContent className="p-4">
+                  <h3 className="font-semibold dark:text-white">{movie.title}</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{movie.type}</p>
+                  <div className="mt-4">
+                    <Button size="sm" variant="outline" className="w-full">Notify Me</Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </motion.div>
+      </TabsContent>
+      
+      <TabsContent value="gift" className="mt-0">
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.2 }}
+        >
+          <motion.div variants={itemVariants}>
+            <Card className="overflow-hidden h-full transition-all hover:shadow-lg group dark:bg-gray-800">
+              <CardContent className="p-6">
+                <h3 className="font-semibold dark:text-white">Digital Gift Cards</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Give the gift of movies with our digital gift cards.</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+          <motion.div variants={itemVariants}>
+            <Card className="overflow-hidden h-full transition-all hover:shadow-lg group dark:bg-gray-800">
+              <CardContent className="p-6">
+                <h3 className="font-semibold dark:text-white">Physical Gift Cards</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Purchase physical gift cards for your loved ones.</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </motion.div>
+      </TabsContent>
+      
+      <TabsContent value="offers" className="mt-0">
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.2 }}
+        >
+          {offers.map((offer) => (
+            <motion.div key={offer.id} variants={itemVariants}>
+              <Card className="h-full overflow-hidden transition-all hover:shadow-lg dark:bg-gray-800">
+                <CardContent className="p-6">
+                  <h3 className="text-xl font-semibold mb-2 dark:text-white">{offer.title}</h3>
+                  <p className="text-gray-600 dark:text-gray-300 mb-4">{offer.description}</p>
+                  {offer.code && (
+                    <div className="p-2 bg-gray-100 dark:bg-gray-700 rounded text-center font-mono mb-4">
+                      {offer.code}
+                    </div>
+                  )}
+                  <Button variant="outline" size="sm" className="w-full">Apply Now</Button>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </motion.div>
+      </TabsContent>
+    </Tabs>
+  </motion.div>
+</section>
 
       {/* App Download Section */}
       <section className="py-12 container mx-auto px-4">
