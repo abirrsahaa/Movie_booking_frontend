@@ -24,6 +24,7 @@ interface PromoOffer {
 
 const HomePage = () => {
   // State for movies and upcoming movies
+  // in the backend i will have to have a response dto for this type of data
   const [nowShowing, setNowShowing] = useState<Movie[]>([
     { id: 1, title: 'Oppenheimer', image: '/movies/oppenheimer.jpg', type: 'IMAX', isNew: true },
     { id: 2, title: 'Barbie', image: '/movies/barbie.jpg', type: 'DOLBY', isNew: true },
@@ -32,6 +33,7 @@ const HomePage = () => {
     { id: 5, title: 'John Wick', image: '/movies/johnwick.jpg', type: 'DOLBY', isNew: true },
   ]);
 
+  // in the backend i will have to have a response dto for this type of data
   const [comingSoon, setComingSoon] = useState<Movie[]>([
     { id: 6, title: 'Deadpool 3', image: '/movies/deadpool3.jpg', type: 'IMAX' },
     { id: 7, title: 'Dune 2', image: '/movies/dune2.jpg', type: 'DOLBY' },
