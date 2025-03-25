@@ -106,3 +106,9 @@ export const offers: Offer[] = [
     expiry: "Limited time offer",
   },
 ];
+
+export const prices: Record<string, number> = {
+    'Premium': 250,
+    'Executive': 200,
+    'Standard': 180
+  };

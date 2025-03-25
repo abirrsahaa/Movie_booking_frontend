@@ -151,3 +151,43 @@ export interface NowShowingProps {
         onShowtimeSelect: (cinema: any, showtime: any) => void;
       }
   
+
+      export interface SeatMapProps{
+        movie: DetailsMovie;
+        cinema: Cinema|null;
+        showtime: Showtime|null;
+        seatMap: Record<string, Record<string, Seat[]>>;
+        selectedSeats: Seat[];
+        toggleSeat: (seat: Seat, section: string, row: string) => void;
+        prices: any;
+        // onProceed: () => void;
+        onClose: () => void;
+        grandTotal: number;
+        setStep: (step: 'seats' | 'payment' | 'confirmation') => void;
+      }
+
+     export  interface PaymentStepProps {
+        setStep: (step: "seats" | "payment") => void;
+      movie: DetailsMovie;
+      cinema: Cinema|null;
+      showtime: Showtime|null;
+      selectedSeats: Seat[];
+      
+      convenienceFee: number;
+      grandTotal: number;
+      paymentMethod: "card" | "wallet";
+      setPaymentMethod: (method: "card" | "wallet") => void;
+      processPayment: () => void;
+      isProcessing: boolean;
+      error: string | null;
+      
+    }
+
+    export interface ConfirmationStepProps {
+        movie: any;
+        cinema: any;
+        showtime: any;
+        selectedSeats: any[];
+        grandTotal: number;
+        onClose: () => void;
+      }
