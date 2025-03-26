@@ -9,6 +9,7 @@ import QuickLinks from '@/components/HomePage/QuickLinks';
 import AppDownload from '@/components/HomePage/AppDownload';
 import Footer from '@/components/HomePage/Footer';
 import { containerVariants, fadeInVariants, itemVariants } from '@/framer-motion/variants';
+import LogoutPage from './LogoutPage';
 
 
 
@@ -53,6 +54,7 @@ const HomePage = () => {
 
       {/* Footer */}
      <Footer/>
+     <LogoutPage />
 
       </div>
     );

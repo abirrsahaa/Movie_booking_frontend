@@ -4,8 +4,12 @@ export const SignupValidation = z.object({
     name: z.string().min(2,{message: "Too short"}),
     email: z.string().email({message: "Email is not valid"}),
     password: z.string().min(6, {message: "Password is too short"}),
-    phone: z.string().min(10, {message :"Invalid mobile number"}).max(10, {message :"Invalid mobile number"}),
-    address: z.string().min(2),
+    phone: z.string()
+    .optional()
+    .refine(phone => !phone || /^[0-9]{10}$/.test(phone), {
+      message: "Invalid mobile number. It should be empty or 10 digits.",
+    }),
+    address: z.string().optional(),
 })
 
 export const LoginValidation = z.object({

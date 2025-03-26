@@ -33,7 +33,6 @@ const VerifyOtp = () => {
                   });
 
                   if (response.status === 200) {
-                    alert("Signup successful!");
                     navigate("/login");
                   }
                 } catch (error: any) {

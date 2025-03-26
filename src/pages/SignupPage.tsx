@@ -37,7 +37,6 @@ const SignupPage = () => {
           });
       
           if (response.status === 200) {
-            alert("Please check your email for OTP verification.");
             navigate("/verify-otp",{});
           }
         } catch (error: any) {
@@ -68,7 +67,7 @@ const SignupPage = () => {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Name <span className="text-red-500">*</span></FormLabel>
               <FormControl>
                 <Input type="text" className="h-12 bg-[#101012]  border-none placeholder:text-[#7878A3] focus-visible:ring-1 focus-visible:ring-offset-1 ring-offset-light-3 !important" {...field} />
               </FormControl>
@@ -81,7 +80,7 @@ const SignupPage = () => {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Email<span className="text-red-500">*</span></FormLabel>
               <FormControl>
                 <Input type="email" className="h-12 bg-[#101012] border-none placeholder:text-[#7878A3] focus-visible:ring-1 focus-visible:ring-offset-1 ring-offset-light-3 !important" {...field} />
               </FormControl>
@@ -94,9 +93,9 @@ const SignupPage = () => {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>Password <span className="text-red-500">*</span></FormLabel>
               <FormControl>
-                <Input type="password" className="h-12 bg-[#101012]  border-none placeholder:text-[#7878A3] focus-visible:ring-1 focus-visible:ring-offset-1 ring-offset-light-3 !important" {...field} />
+                <Input type="password" className="h-12 bg-[#101012]  border-none placeholder:text-[#7878A3] focus-visible:ring-1 focus-visible:ring-offset-1 ring-offset-light-3" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -109,7 +108,7 @@ const SignupPage = () => {
             <FormItem>
               <FormLabel>Phone No</FormLabel>
               <FormControl>
-                <Input type="text" className="h-12 bg-[#101012]  border-none placeholder:text-[#7878A3]focus-visible:ring-1 focus-visible:ring-offset-1 ring-offset-light-3 !important" {...field} />
+                <Input type="text" className="h-12 bg-[#101012]  border-none placeholder:text-[#7878A3]focus-visible:ring-1 focus-visible:ring-offset-1 ring-offset-light-3" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

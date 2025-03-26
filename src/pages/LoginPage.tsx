@@ -35,7 +35,6 @@ const LoginPage = () => {
                 if (response.status === 200) {
                   const token = response.data; // Backend directly returns JWT token
                   localStorage.setItem("token", token); // Store in localStorage
-                  alert("Login Successfull");
                   navigate("/",{});
                 }
               } catch (error: any) {
