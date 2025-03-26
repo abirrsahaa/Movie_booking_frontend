@@ -111,7 +111,7 @@ const PaymentStep: React.FC<PaymentStepProps> = ({
           </CardContent>
         </Card>
         
-        <Card>
+        {/* <Card>
           <CardHeader className="py-4">
             <CardTitle className="text-base">Payment Method</CardTitle>
           </CardHeader>
@@ -197,7 +197,7 @@ const PaymentStep: React.FC<PaymentStepProps> = ({
               </TabsContent>
             </Tabs>
           </CardContent>
-        </Card>
+        </Card> */}
         
         {error && (
           <Alert variant="destructive">
