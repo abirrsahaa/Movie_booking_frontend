@@ -58,7 +58,7 @@ const SignupPage = () => {
     
     <Form {...form}>
       <div className="sm:w-[420px] flex justify-center items-center flex-col">
-        <h1 className="text-[35px] text-yellow-500 font-bold">MovieMagic</h1>
+        <h1 className="text-[35px] text-yellow-500 font-bold">Wissen Entertainments</h1>
         <h2 className="text-[24px] font-bold leading-[140%] tracking-tighter md:text-[30px] pt-5">Create a new account</h2>
         <p className="mt-2 text-[#7878A3] text-[14px] font-medium leading-[140%] md:text-[16px] md:font-normal">To use MovieMagic enter your details</p>
       

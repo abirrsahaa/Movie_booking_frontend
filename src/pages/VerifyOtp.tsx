@@ -53,7 +53,7 @@ const VerifyOtp = () => {
 
   return (
     <Form {...form}>
-          <div className="sm:w-[420px] flex justify-center items-center flex-col">
+          <div className="sm:w-[420px] py-20 flex justify-center items-center flex-col">
           <h1 className="text-[35px] text-yellow-500 font-bold">MovieMagic</h1>
           <h2 className="text-[24px] font-bold leading-[140%] tracking-tighter md:text-[30px] pt-5">Verify Your OTP</h2>
             <form

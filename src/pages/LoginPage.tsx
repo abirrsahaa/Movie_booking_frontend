@@ -53,7 +53,7 @@ const LoginPage = () => {
     return (
         <Form {...form}>
           <div className="sm:w-[420px] flex justify-center items-center flex-col">
-            <h1>MovieMagic</h1>
+            <h1 className="text-[35px] text-yellow-500 font-bold">Wissen Entertainments</h1>
             <h2 className="text-[24px] font-bold leading-[140%] tracking-tighter md:text-[30px] pt-5 sm:pt-12">
               Log in to your account
             </h2>
@@ -104,7 +104,7 @@ const LoginPage = () => {
               <p className="text-[14px] text-[#EFEFEF] text-center mt-2">
                 Don&apos;t have an account?
                 <Link
-                  to="/sign-up"
+                  to="/signup"
                   className="text-[#877EFF] text-[12px] font-semibold ml-1">
                   Sign up
                 </Link>
