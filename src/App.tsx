@@ -6,6 +6,11 @@ import TheatresPage from './pages/TheatrePage';
 import BookingsPage from './pages/MyBookings';
 import MovieDetailsPage from './pages/MovieDetailsPage';
 import { cinemas, dates, movie, offers, reviews } from './constants/FixedData';
+import AuthLayout from './layouts/AuthLayout';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
+import VerifyOtp from './pages/VerifyOtp';
+import "./lib/interceptors"
 
 
 function App() {
@@ -31,6 +36,15 @@ function App() {
 
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
+
+          <Route path="/" element={<AuthLayout />}>
+            <Route path='signup' element= { <SignupPage /> } />
+            <Route path='login' element={<LoginPage />} />
+            <Route path='verify-otp' element={<VerifyOtp />} />
+          </Route> 
+
+
+
       </Routes>
     </Router>
   );
