@@ -24,7 +24,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPath }) => {
   return (
     <div className="w-60 h-full bg-white flex flex-col border-r">
       <div className="p-4 border-b">
-        <h1 className="text-2xl font-bold text-red-600">MovieMagic</h1>
+        <h1 className="text-lg font-bold text-red-600">WissenEntertainments</h1>
       </div>
       
       <nav className="flex-1 p-4 space-y-1">

@@ -24,6 +24,8 @@ const ComingSoon: React.FC<ComingSoonProps> = ({containerVariants,itemVariants})
     
       },[])
 
+      if(comingSoon.length===0)return <p>Loading movies...</p>
+
     return (
         <section className="py-12 container mx-auto px-4 bg-gray-100 dark:bg-gray-800/50">
         <div className="flex justify-between items-center mb-8">

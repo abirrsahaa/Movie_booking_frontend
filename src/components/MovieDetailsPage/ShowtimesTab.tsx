@@ -68,7 +68,7 @@ const ShowtimesTab:React.FC<ShowtimesTabProps> = ({dates,cinemas,slideUp,stagger
                          • {cinema.distance}
                       </div>
                     </div>
-                    <Button variant="ghost" size="sm" className="text-blue-600 dark:text-blue-400">
+                    <Button variant="ghost" size="sm" className="text-red-600 dark:text-red-400">
                       <Info className="w-4 h-4 mr-1" /> Info
                     </Button>
                   </div>

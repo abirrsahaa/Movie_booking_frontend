@@ -193,7 +193,7 @@ const QuickLinks: React.FC<QuickLinkProps> = ({fadeInVariants,containerVariants,
                   <motion.div key={offer.id} variants={itemVariants}>
                     <Card className="h-full overflow-hidden transition-all hover:shadow-lg dark:bg-gray-800">
                       <CardContent className="p-6">
-                        <h3 className="text-xl font-semibold mb-2 dark:text-white">{offer.title}</h3>
+                        <h3 className="text-lg font-semibold mb-2 dark:text-white">{offer.title}</h3>
                         <p className="text-gray-600 dark:text-gray-300 mb-4">{offer.description}</p>
                         {offer.code && (
                           <div className="p-2 bg-gray-100 dark:bg-gray-700 rounded text-center font-mono mb-4">

@@ -42,10 +42,10 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <HeroSection scrollY={scrollY} />
+      <HeroSection />
 
       {/* Now Showing Movies */}
-      <NowShowing  containerVariants={containerVariants} itemVariants={itemVariants} />
+      <NowShowing    />
 
       {/* Coming Soon */}
       <ComingSoon  containerVariants={containerVariants} itemVariants={itemVariants} />
@@ -55,13 +55,13 @@ const HomePage = () => {
       <BrowseByCategory containerVariants={containerVariants} itemVariants={itemVariants} />
 
       {/* Offers and Promotions */}
-      <OffersAndPromotions  containerVariants={containerVariants} itemVariants={itemVariants} />
+      {/* <OffersAndPromotions  containerVariants={containerVariants} itemVariants={itemVariants} /> */}
 
       {/* Quick Links */}
       <QuickLinks fadeInVariants={fadeInVariants} containerVariants={containerVariants} itemVariants={itemVariants}  />
 
-      {/* App Download Section */}
-     <AppDownload />
+      {/* App Download Section
+     <AppDownload /> */}
 
       {/* Footer */}
      <Footer/>

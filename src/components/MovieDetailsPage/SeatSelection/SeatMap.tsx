@@ -29,7 +29,7 @@ const SeatMap: React.FC<SeatMapProps> = ({
       <DialogHeader className="px-6 pt-6 pb-2">
         <div className="flex justify-between items-start">
           <div>
-            <DialogTitle className="text-xl">{movie.title}</DialogTitle>
+            <DialogTitle className="text-lg">{movie.title}</DialogTitle>
             <p className="text-sm text-zinc-500 mt-1">
               {cinema && showtime ? `${cinema.name} • ${showtime.time} ` : 'N/A'}
             </p>

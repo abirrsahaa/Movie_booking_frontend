@@ -39,7 +39,7 @@ const PaymentStep: React.FC<PaymentStepProps> = ({
     <DialogHeader className="px-6 pt-6 pb-2">
       <div className="flex justify-between items-start">
         <div>
-          <DialogTitle className="text-xl">Payment</DialogTitle>
+          <DialogTitle className="text-lg">Payment</DialogTitle>
           <p className="text-sm text-zinc-500 mt-1">
             Complete your booking
           </p>
@@ -163,7 +163,7 @@ const PaymentStep: React.FC<PaymentStepProps> = ({
                 <div className="grid grid-cols-2 gap-4">
                   <div className="border rounded-md p-3 flex items-center gap-2 cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800">
                     <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                      <Wallet className="w-4 h-4 text-blue-600" />
+                      <Wallet className="w-4 h-4 text-red-600" />
                     </div>
                     <div>
                       <p className="text-sm font-medium">PayTM</p>
