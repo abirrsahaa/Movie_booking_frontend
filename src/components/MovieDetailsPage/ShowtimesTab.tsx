@@ -65,7 +65,7 @@ const ShowtimesTab:React.FC<ShowtimesTabProps> = ({dates,cinemas,slideUp,stagger
                       </div>
                       <div className="flex items-center text-sm text-zinc-500 dark:text-zinc-400">
                         <MapPin className="w-3 h-3 mr-1" />
-                        {cinema.location} • {cinema.distance}
+                         • {cinema.distance}
                       </div>
                     </div>
                     <Button variant="ghost" size="sm" className="text-blue-600 dark:text-blue-400">
@@ -82,7 +82,7 @@ const ShowtimesTab:React.FC<ShowtimesTabProps> = ({dates,cinemas,slideUp,stagger
                         onClick={() => onShowtimeSelect(cinema, showtime)}
                       >
                         <ChevronRight className="w-4 h-4 mr-1" />
-                        {showtime.time} - {showtime.type} - {showtime.price}
+                        {showtime.time}  - {showtime.price}
                       </Button>
                     ))}
                   </div>

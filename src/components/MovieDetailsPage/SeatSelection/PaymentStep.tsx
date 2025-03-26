@@ -64,13 +64,13 @@ const PaymentStep: React.FC<PaymentStepProps> = ({
               </div>
               <div className="flex justify-between">
                 <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                  {showtime ? `${showtime.time} • ${showtime.type}` : 'N/A'}
+                  {showtime ? `${showtime.time} ` : 'N/A'}
                 </span>
                 <span className="text-sm">{selectedSeats.length} {selectedSeats.length === 1 ? 'Ticket' : 'Tickets'}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-sm text-zinc-600 dark:text-zinc-400">Seats</span>
-                <span className="text-sm">{selectedSeats.map(seat => (seat.row || '') + seat.number).join(', ')}</span>
+                <span className="text-sm">{selectedSeats.map(seat => (seat.seatRow || '') + seat.seatNumber).join(', ')}</span>
               </div>
             </div>
           </CardContent>

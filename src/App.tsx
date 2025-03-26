@@ -18,7 +18,8 @@ function App() {
 
           <Route path="movies" element={<MoviesPage />} />
 
-          <Route path="moviesSpecific" element={<MovieDetailsPage movie={movie}
+          <Route path="moviesSpecific/:id" element={<MovieDetailsPage 
+                movie={movie}
                 dates={dates}
                 cinemas={cinemas}
                 reviews={reviews}

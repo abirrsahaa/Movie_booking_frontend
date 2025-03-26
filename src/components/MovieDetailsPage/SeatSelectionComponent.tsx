@@ -1,11 +1,14 @@
 import { Seat, SeatSelectionProps } from "@/interfaces/interfaces_All";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import { Dialog, DialogContent } from "../ui/dialog";
 import { AnimatePresence } from "framer-motion";
 import ConfirmationStep from "./SeatSelection/ConfirmationStep";
 import PaymentStep from "./SeatSelection/PaymentStep";
 import SeatMap from "./SeatSelection/SeatMap";
+import { prices } from "@/constants/FixedData";
+import { resolve } from "path";
+
 
 const SeatSelectionComponent: React.FC<SeatSelectionProps> = ({ 
     movie, 
@@ -20,98 +23,156 @@ const SeatSelectionComponent: React.FC<SeatSelectionProps> = ({
       const [paymentMethod, setPaymentMethod] = useState<'card' | 'wallet'>('card');
       const [isProcessing, setIsProcessing] = useState(false);
       const [error, setError] = useState<string | null>(null);
+
+      const validateSeat = (seat: any): seat is Seat => {
+        // Check for required properties and their types
+        const requiredProps = [
+          'id',
+          'seatNumber',
+          'seatAvailable',
+          'seatRow',
+          'section'
+        ];
+      
+        // Check if all required properties exist and have valid types
+        const isValid = requiredProps.every(prop => {
+          if (!seat.hasOwnProperty(prop)) {
+            console.warn(`Missing property: ${prop}`, seat);
+            return false;
+          }
+          return true;
+        });
+      
+        // Additional validation checks
+        const typeChecks = [
+          typeof seat.id === 'number',
+          typeof seat.seatNumber === 'number',
+          typeof seat.seatAvailable === 'boolean'
+        ];
+      
+        const passesTypeChecks = typeChecks.every(check => check);
+      
+        if (!isValid || !passesTypeChecks) {
+          console.warn('Invalid seat data:', seat);
+          return false;
+        }
+      
+        return true;
+      };
     
-    // Mock seat data
-    useEffect(() => {
-  
-      const aesehi=async ()=>{
-        const getting=await axios.get("http://localhost:9090/hello");
-        console.log(getting.data);
-      }
-      aesehi();
-      if (open) {
-        const generateSeats = () => {
-          const sections = ['Premium', 'Executive', 'Standard'];
-          const rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
-          
-          const seatData: Record<string, Record<string, Seat[]>> = {};
-          
-          sections.forEach(section => {
-            seatData[section] = {};
-            
-            // Different rows per section
-            const sectionRows = section === 'Premium' ? rows.slice(0, 3) : 
-                               section === 'Executive' ? rows.slice(3, 7) : 
-                               rows.slice(7, 10);
-            
-            sectionRows.forEach(row => {
-              seatData[section][row] = [];
-              
-              // Generate seats for each row with some random unavailable seats
-              for (let i = 1; i <= 18; i++) {
-                // Create a gap in the middle
-                if (i === 9 || i === 10) continue;
-                
-                // Random unavailable seats (around 15%)
-                const unavailable = Math.random() < 0.15;
-                
-                seatData[section][row].push({
-                  id: `${row}${i}`,
-                  number: i,
-                  status: unavailable ? 'sold' : 'available'
-                });
+      // Fetch seats for the specific showtime
+      useEffect(() => {
+        const fetchSeats = async () => {
+          try {
+            const showtimeId =  1;
+            const response = await axios.get(`http://localhost:9090/showtime/${showtimeId}`);
+            const fetchedSeats: any[] = response.data;
+      
+            console.log('Total fetched seats:', fetchedSeats.length);
+      
+            // Filter out invalid seats
+            const validSeats = fetchedSeats.filter(validateSeat);
+      
+            console.log('Valid seats:', validSeats.length);
+      
+            if (validSeats.length === 0) {
+              throw new Error('No valid seats found in the seat map');
+            }
+      
+            const seatData: Record<string, Record<string, Seat[]>> = {};
+      
+            validSeats.forEach((seat: Seat) => {
+              // Initialize the section if it doesn't exist
+              const section = seat.section || 'default';
+              const seatRow = seat.seatRow || 'default';
+      
+              if (!seatData[section]) {
+                seatData[section] = {};
               }
+      
+              // Initialize the row within the section if it doesn't exist
+              if (!seatData[section][seatRow]) {
+                seatData[section][seatRow] = [];
+              }
+      
+              // Push the seat into the appropriate section and row
+              seatData[section][seatRow].push({
+                ...seat,
+                price: prices[section] || 0
+              });
             });
-          });
-          
-          return seatData;
+      
+            setSeatMap(seatData);
+          } catch (error) {
+            console.error("Error fetching seat data:", error);
+            setError('Failed to load seat map');
+          }
         };
-        
-        setSeatMap(generateSeats());
-      }
-    }, [open]);
-  
-    const prices: Record<string, number> = {
-      'Premium': 250,
-      'Executive': 200,
-      'Standard': 180
-    };
+      
+        if (open) {
+          fetchSeats();
+        }
+      }, [open, showtime?.id]);
   
     // Handle seat selection
-    const toggleSeat = (seat: Seat, section: string, row: string) => {
-      if (seat.status === 'sold') return;
+    const toggleSeat = (seat: Seat, section: string, seatRow: string) => {
+      if (!seat.seatAvailable) return;
       
-      const seatId = `${section}-${row}-${seat.id}`;
+      const seatId = `${section}-${seatRow}-${seat.id}`;
       
-      if (selectedSeats.some(s => s.id === seatId)) {
-        setSelectedSeats(selectedSeats.filter(s => s.id !== seatId));
+      // Check if seat is already selected
+      const existingSeatIndex = selectedSeats.findIndex(s => 
+        s.id === seat.id && 
+        s.section === section && 
+        s.seatRow === seatRow
+      );
+      
+      if (existingSeatIndex !== -1) {
+        // Remove seat if already selected
+        setSelectedSeats(selectedSeats.filter((_, index) => index !== existingSeatIndex));
       } else {
+        // Add seat if not already selected
         setSelectedSeats([...selectedSeats, { 
-          id: seatId, 
-          number: parseInt(seat.id, 10), 
-          row, 
+          ...seat,
           section,
-          price: prices[section],
-          status: 'available' // Assuming the seat is available when selected
+          seatRow,
+          price: prices[section] || 0,
+          showtime: showtime
         }]);
       }
     };
   
     // Process payment
-    const processPayment = () => {
+    const processPayment = async () => {
       setIsProcessing(true);
       setError(null);
       
-      // Simulate API call
-      setTimeout(() => {
-        setIsProcessing(false);
+      try {
+        // Simulate payment processing
+        // call the backend api for booking with the seats array 
+        const seatIds:number[] = selectedSeats.map(seat => seat.id);
+
+
+        const response = await axios.post(`http://localhost:9090/bookingMovie/13/${movie.id}`, {
+          "seatIds":seatIds
+        });
+        console.log(response);
+       
+        // await new Promise(resolve => setTimeout(resolve, 1500));
+        
         // Random success (90% chance)
         if (Math.random() < 0.9) {
+          // Here you might want to add actual payment processing logic
           setStep('confirmation');
         } else {
-          setError('Payment failed. Please try again.');
+          throw new Error('Payment failed');
         }
-      }, 1500);
+      } catch (paymentError) {
+        setError('Payment failed. Please try again.');
+        console.log(paymentError);
+      } finally {
+        setIsProcessing(false);
+      }
     };
   
     // Calculate total amount
@@ -138,7 +199,8 @@ const SeatSelectionComponent: React.FC<SeatSelectionProps> = ({
                 prices={prices} 
                 onClose={onClose} 
                 grandTotal={grandTotal} 
-                setStep={setStep}/>
+                setStep={setStep}
+              />
             )}
             {step === 'payment' && (
               <PaymentStep 
@@ -154,7 +216,7 @@ const SeatSelectionComponent: React.FC<SeatSelectionProps> = ({
                 selectedSeats={selectedSeats}
                 movie={movie}
                 convenienceFee={convenienceFee}
-                />
+              />
             )}
             {step === 'confirmation' && (
               <ConfirmationStep 
@@ -163,7 +225,8 @@ const SeatSelectionComponent: React.FC<SeatSelectionProps> = ({
                 showtime={showtime} 
                 selectedSeats={selectedSeats} 
                 grandTotal={grandTotal} 
-                onClose={onClose}/>
+                onClose={onClose}
+              />
             )}
           </AnimatePresence>
         </DialogContent>
@@ -171,4 +234,4 @@ const SeatSelectionComponent: React.FC<SeatSelectionProps> = ({
     );
   };
 
-  export default SeatSelectionComponent;
+export default SeatSelectionComponent;

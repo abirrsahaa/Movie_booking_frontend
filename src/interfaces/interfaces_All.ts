@@ -59,17 +59,18 @@ export interface NowShowingProps {
   }
   
   export interface Showtime {
+    id:number;
     time: string;
-    type: string;
+   
     price: number;
   }
   
   export interface Cinema {
+    id:number;
     name: string;
-    location: string;
     distance: string;
     showtimes: Showtime[];
-    available: boolean;
+   
   }
   
   export interface Review {
@@ -87,20 +88,26 @@ export interface NowShowingProps {
   }
   
   export interface Seat {
-    id: string;
-    number: number;
-    status: 'available' | 'sold';
-    row?: string;
+    id: number;
+    seatNumber: number;
+    seatAvailable: boolean;
+    seatRow?: string;
     section?: string;
     price?: number;
+    showtime?:intermediate_showtime;
+  }
+
+  interface intermediate_showtime{
+    id:number;
+    movie?:HomePageMovie
   }
 
   export interface HeroSectionProps {
-    movie: DetailsMovie;
+    movie: HomePageMovie;
   }
 
     export interface SeatSelectionProps {
-      movie: DetailsMovie;
+      movie: HomePageMovie;
       cinema: Cinema | null;
       showtime: Showtime | null;
       onClose: () => void;
@@ -108,11 +115,9 @@ export interface NowShowingProps {
     }
     
     export interface MovieDetailsPageProps {
-      movie: DetailsMovie;
+     
       dates: { day: string; date: string; month: string }[];
       cinemas: Cinema[];
-      reviews: Review[];
-      offers: Offer[];
     }
 
     export interface OffersTabProps {
@@ -141,11 +146,9 @@ export interface NowShowingProps {
     }
 
     export interface TabsSectionProps {
-        movie: DetailsMovie;
+        movie: HomePageMovie;
         dates: { day: string; date: string; month: string }[];
         cinemas: Cinema[];
-        reviews: Review[];
-        offers: Offer[];
         staggerChildren: any;
         slideUp: any;
         onShowtimeSelect: (cinema: any, showtime: any) => void;

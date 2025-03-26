@@ -7,6 +7,7 @@ import {  HeroSectionProps } from "@/interfaces/interfaces_All";
 
 
 const HeroSection: React.FC<HeroSectionProps> = ({ movie }) => {
+  console.log(movie);
   return (
     <motion.div
       className="relative w-full h-96 overflow-hidden"
@@ -22,7 +23,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ movie }) => {
         whileHover={{ opacity: 0.7 }}
       />
       <motion.img
-        src={movie.banner}
+        src={movie.image}
         alt={movie.title}
         className="w-full h-full object-cover"
         initial={{ scale: 1.1 }}
@@ -31,47 +32,48 @@ const HeroSection: React.FC<HeroSectionProps> = ({ movie }) => {
       />
 
       <div className="absolute bottom-0 left-0 z-20 w-full p-6">
+        
         <div className="container mx-auto flex flex-col md:flex-row items-end gap-6">
           <motion.div
             className="w-32 h-48 bg-zinc-800 rounded-lg overflow-hidden shadow-xl"
             whileHover={{ y: -5 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
-            <img src={movie.poster} alt={movie.title} className="w-full h-full object-cover" />
+            <img src={movie.image} alt={movie.title} className="w-full h-full object-cover" />
           </motion.div>
 
           <motion.div className="flex-1 text-white">
-            <div className="flex items-center gap-2 mb-1">
+            {/* <div className="flex items-center gap-2 mb-1">
               <Badge className="bg-green-600 hover:bg-green-700">{movie.rating}</Badge>
               <div className="flex items-center gap-1">
                 <Star className="w-4 h-4 fill-yellow-400 stroke-yellow-400" />
                 <span className="text-sm font-medium">{movie.score}</span>
               </div>
-            </div>
+            </div> */}
 
             <h1 className="text-4xl font-bold mb-2">{movie.title}</h1>
 
             <div className="flex flex-wrap gap-2 mb-3">
-              {movie.genres.map((genre, i) => (
-                <Badge key={i} variant="outline" className="border-zinc-600">
-                  {genre}
+
+                <Badge  variant="outline" className="border-zinc-600">
+                  {movie.type}
                 </Badge>
-              ))}
-              <Badge variant="outline" className="border-zinc-600 flex items-center gap-1">
+             
+              {/* <Badge variant="outline" className="border-zinc-600 flex items-center gap-1">
                 <Clock className="w-3 h-3" /> {movie.duration}
-              </Badge>
-              <Badge variant="outline" className="border-zinc-600">{movie.ageRating}</Badge>
-              <Badge variant="outline" className="border-zinc-600">{movie.language}</Badge>
+              </Badge> */}
+              {/* <Badge variant="outline" className="border-zinc-600">{movie.ageRating}</Badge> */}
+              {/* <Badge variant="outline" className="border-zinc-600">{movie.language}</Badge> */}
             </div>
 
-            <p className="text-zinc-300 max-w-2xl mb-4">{movie.description}</p>
+            {/* <p className="text-zinc-300 max-w-2xl mb-4">{movie.description}</p> */}
 
-            <div className="flex gap-3">
+            {/* <div className="flex gap-3">
               <Button className="bg-red-600 hover:bg-red-700">Book Tickets</Button>
               <Button variant="outline" className="border-zinc-600 text-white hover:bg-zinc-800">
                 <Film className="mr-2 h-4 w-4" /> Trailer
               </Button>
-            </div>
+            </div> */}
           </motion.div>
         </div>
       </div>

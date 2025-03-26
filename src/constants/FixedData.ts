@@ -11,8 +11,8 @@ export const movie: DetailsMovie = {
   language: "English",
   director: "Christopher Nolan",
   cast: ["Cillian Murphy", "Emily Blunt", "Matt Damon", "Robert Downey Jr."],
-  poster: "/api/placeholder/300/450",
-  banner: "/api/placeholder/1600/600",
+  poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgL0MrTzzTfdC_ucVWLD7_bd8n5s1GQobGsg&s",
+  banner: "https://www.posterized.in/cdn/shop/files/newwall11.jpg?v=1736616645&width=1946",
 };
 
 export const dates: { day: string; date: string; month: string }[] = [
@@ -27,41 +27,38 @@ export const dates: { day: string; date: string; month: string }[] = [
 
 export const cinemas: Cinema[] = [
   {
+    id:1,
     name: "INOX: Prozone Mall",
-    location: "Coimbatore, Tamil Nadu",
     distance: "5.2 km",
     showtimes: [
-      { time: "10:15 AM", type: "Executive", price: 200 },
-      { time: "1:30 PM", type: "Executive", price: 200 },
-      { time: "4:45 PM", type: "Premium", price: 250 },
-      { time: "8:00 PM", type: "Premium", price: 250 },
-      { time: "10:30 PM", type: "Premium", price: 250 },
-    ],
-    available: true,
+      {id:1, time: "10:15 AM", price: 200 },
+      { id:2,time: "1:30 PM",  price: 200 },
+      {id:3, time: "4:45 PM",  price: 250 },
+      {id:4, time: "8:00 PM",  price: 250 },
+      { id:5,time: "10:30 PM", price: 250 },
+    ]
   },
   {
+    id:2,
     name: "PVR: Cinemas",
-    location: "Phoenix Mall, Velachery",
     distance: "3.8 km",
     showtimes: [
-      { time: "11:30 AM", type: "Executive", price: 230 },
-      { time: "2:45 PM", type: "Executive", price: 230 },
-      { time: "6:00 PM", type: "Premium", price: 280 },
-      { time: "9:15 PM", type: "Executive", price: 240 },
-    ],
-    available: true,
+      {id:6, time: "11:30 AM",  price: 230 },
+      {id:7, time: "2:45 PM",  price: 230 },
+      {id:8, time: "6:00 PM",  price: 280 },
+      {id:9, time: "9:15 PM",  price: 240 },
+    ]
   },
   {
+    id:3,
     name: "Cinepolis: Forum Mall",
-    location: "Vadapalani",
     distance: "7.1 km",
     showtimes: [
-      { time: "12:30 PM", type: "Executive", price: 220 },
-      { time: "3:45 PM", type: "Executive", price: 220 },
-      { time: "7:15 PM", type: "Premium", price: 290 },
-      { time: "10:45 PM", type: "Premium", price: 290 },
-    ],
-    available: true,
+      {id:10, time: "12:30 PM",  price: 220 },
+      {id:11, time: "3:45 PM",  price: 220 },
+      {id:12, time: "7:15 PM",  price: 290 },
+      {id:13, time: "10:45 PM",  price: 290 },
+    ]
   },
 ];
 
