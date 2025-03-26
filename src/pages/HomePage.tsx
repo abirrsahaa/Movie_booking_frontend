@@ -9,6 +9,7 @@ import QuickLinks from '@/components/HomePage/QuickLinks';
 import AppDownload from '@/components/HomePage/AppDownload';
 import Footer from '@/components/HomePage/Footer';
 import { containerVariants, fadeInVariants, itemVariants } from '@/framer-motion/variants';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -16,6 +17,17 @@ const HomePage = () => {
 
   // Parallax effect for the hero section
   const [scrollY, setScrollY] = useState(0);
+
+  const navigate = useNavigate();
+
+  // Check for existing token on component mount
+  useEffect(() => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+          // If token exists, redirect to main page
+          navigate('/login');
+      }
+  }, [navigate]);
   
   useEffect(() => {
     const aesehi=async ()=>{

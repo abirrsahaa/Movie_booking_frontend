@@ -8,16 +8,22 @@ import MovieDetailsPage from './pages/MovieDetailsPage';
 import { cinemas, dates, movie, offers, reviews } from './constants/FixedData';
 import AuthLayout from './layouts/AuthLayout';
 import LoginPage from './pages/LoginPage';
-import SignupPage from './pages/SignupPage';
+
 import VerifyOtp from './pages/VerifyOtp';
 import "./lib/interceptors"
+import SignupPage from './pages/SignupPage';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
 
 
 function App() {
   return (
+
+    <Provider store={store}>
     <Router>
       <Routes>
-        <Route path="/" element={<RootLayout />}>
+        <Route path="/main" element={<RootLayout />}>
+           
 
           <Route index element={<HomePage />} />
 
@@ -38,7 +44,7 @@ function App() {
         </Route>
 
           <Route path="/" element={<AuthLayout />}>
-            <Route path='signup' element= { <SignupPage /> } />
+            <Route index  element={ <SignupPage/> } />
             <Route path='login' element={<LoginPage />} />
             <Route path='verify-otp' element={<VerifyOtp />} />
           </Route> 
@@ -47,7 +53,10 @@ function App() {
 
       </Routes>
     </Router>
+    </Provider>
   );
+
 }
 
 export default App;
+

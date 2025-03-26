@@ -42,7 +42,7 @@ const NowShowing: React.FC<NowShowingProps> = ({ containerVariants, itemVariants
         >
           {nowShowing.map((movie) => (
             <motion.div key={movie.id} variants={itemVariants}>
-              <Link to={`/moviesSpecific/${movie.id}`}> {/* Wrap the card with Link */}
+              <Link to={`/main/moviesSpecific/${movie.id}`}> {/* Wrap the card with Link */}
                 <Card className="overflow-hidden h-full transition-all hover:shadow-lg group dark:bg-gray-800">
                   <div className="relative aspect-[2/3] bg-gray-100 dark:bg-gray-700">
                     {movie.isNew && (

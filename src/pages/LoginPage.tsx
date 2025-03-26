@@ -6,14 +6,22 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@
 import { Input } from "@/components/ui/input"
 import { LoginValidation } from "@/lib/validation";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Loader from "@/components/MovieDetailsPage/Loader";
 import axios from "axios";
 
 const LoginPage = () => {
-  
     const [isLoading, setIsLoading] = useState(false);
-    const navigate  = useNavigate();
+    const navigate = useNavigate();
+
+    // Check for existing token on component mount
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            // If token exists, redirect to main page
+            navigate('/main');
+        }
+    }, [navigate]);
 
     const form = useForm<z.infer<typeof LoginValidation>>({
         resolver: zodResolver(LoginValidation),
@@ -21,35 +29,36 @@ const LoginPage = () => {
           email: "",
           password: "",
         },
-      });
+    });
 
-      async function handleLogin(values: z.infer<typeof LoginValidation>) {
-              setIsLoading(true);
+    async function handleLogin(values: z.infer<typeof LoginValidation>) {
+        setIsLoading(true);
 
-              try {
-                // Send form data to backend
-                const response = await axios.post("http://localhost:8080/auth/login", values, {
-                  withCredentials: true
-                });
-            
-                if (response.status === 200) {
-                  const token = response.data; // Backend directly returns JWT token
-                  localStorage.setItem("token", token); // Store in localStorage
-                  alert("Login Successfull");
-                  navigate("/",{});
-                }
-              } catch (error: any) {
-                if (error.response) {
-                  // Show error message from backend
-                  alert(error.response.data.message || "Login Failed. Please try again.");
-                } else {
-                  alert("An unexpected error occurred.");
-                }
-              } finally{
-                setIsLoading(false);
-              }
-      
+        try {
+            // Send form data to backend
+            const response = await axios.post("http://localhost:9090/auth/login", values, {
+                withCredentials: true
+            });
+        
+            if (response.status === 200) {
+                const token = response.data; // Backend directly returns JWT token
+                localStorage.setItem("token", token); // Store in localStorage
+                alert("Login Successful");
+                navigate("/main"); // Redirect to main page after successful login
             }
+        } catch (error: any) {
+            if (error.response) {
+                // Show error message from backend
+                alert(error.response.data.message || "Login Failed. Please try again.");
+                navigate("/");
+            } else {
+                alert("An unexpected error occurred.");
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
     return (
         <Form {...form}>
           <div className="sm:w-[420px] flex justify-center items-center flex-col">
@@ -70,7 +79,11 @@ const LoginPage = () => {
                   <FormItem>
                     <FormLabel className="">Email</FormLabel>
                     <FormControl>
-                      <Input type="text" className="h-12 bg-[#101012]  border-none placeholder:text-[#7878A3] focus-visible:ring-1 focus-visible:ring-offset-1 ring-offset-light-3 !important" {...field} />
+                      <Input 
+                        type="text" 
+                        className="h-12 bg-[#101012] border-none placeholder:text-[#7878A3] focus-visible:ring-1 focus-visible:ring-offset-1 ring-offset-light-3 !important" 
+                        {...field} 
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -84,27 +97,32 @@ const LoginPage = () => {
                   <FormItem>
                     <FormLabel className="">Password</FormLabel>
                     <FormControl>
-                      <Input type="password" className="h-12 bg-[#101012]  border-none placeholder:text-[#7878A3] focus-visible:ring-1 focus-visible:ring-offset-1 ring-offset-light-3 !important" {...field} />
+                      <Input 
+                        type="password" 
+                        className="h-12 bg-[#101012] border-none placeholder:text-[#7878A3] focus-visible:ring-1 focus-visible:ring-offset-1 ring-offset-light-3 !important" 
+                        {...field} 
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
     
-              <Button type="submit" className="bg-[#877EFF] hover:bg-[#877EFF] text-[#FFFFFF] flex gap-2 !important cursor-pointer">
-                        {isLoading ? (
-                          <div className="flex gap-2 items-center justify-center">
-                            <Loader /> Loading...
-                          </div>
-                        ) : "Login"
-                        }
-                        
-                      </Button>
+              <Button 
+                type="submit" 
+                className="bg-[#877EFF] hover:bg-[#877EFF] text-[#FFFFFF] flex gap-2 !important cursor-pointer"
+              >
+                {isLoading ? (
+                  <div className="flex gap-2 items-center justify-center">
+                    <Loader /> Loading...
+                  </div>
+                ) : "Login"}
+              </Button>
     
               <p className="text-[14px] text-[#EFEFEF] text-center mt-2">
                 Don&apos;t have an account?
                 <Link
-                  to="/signup"
+                  to="/"
                   className="text-[#877EFF] text-[12px] font-semibold ml-1">
                   Sign up
                 </Link>
@@ -115,4 +133,4 @@ const LoginPage = () => {
     );    
 }
 
-export default LoginPage
+export default LoginPage;

@@ -8,6 +8,7 @@ import PaymentStep from "./SeatSelection/PaymentStep";
 import SeatMap from "./SeatSelection/SeatMap";
 import { prices } from "@/constants/FixedData";
 import { resolve } from "path";
+import { useAppSelector } from "@/store/store";
 
 
 const SeatSelectionComponent: React.FC<SeatSelectionProps> = ({ 
@@ -17,6 +18,10 @@ const SeatSelectionComponent: React.FC<SeatSelectionProps> = ({
     onClose, 
     open 
   }) => {
+    const { userData, isAuthenticated, isLoading, errorR } = useAppSelector((state) => state.user);
+
+    console.log(userData);
+
       const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
       const [seatMap, setSeatMap] = useState<Record<string, Record<string, Seat[]>>>({});
       const [step, setStep] = useState<'seats' | 'payment' | 'confirmation'>('seats');
@@ -153,7 +158,7 @@ const SeatSelectionComponent: React.FC<SeatSelectionProps> = ({
         const seatIds:number[] = selectedSeats.map(seat => seat.id);
 
 
-        const response = await axios.post(`http://localhost:9090/bookingMovie/13/${movie.id}`, {
+        const response = await axios.post(`http://localhost:9090/bookingMovie/${userData?.id}/${movie.id}`, {
           "seatIds":seatIds
         });
         console.log(response);
