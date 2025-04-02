@@ -60,7 +60,7 @@ const UserProfile: React.FC = () => {
         <p className="text-sm font-medium">{displayName}</p>
         <div className="flex text-xs text-gray-500 space-x-2">
           <button 
-            onClick={() => navigate('/profile')} 
+            onClick={() => navigate('/main/profile')} 
             className="hover:text-gray-900"
           >
             View Profile
@@ -70,7 +70,7 @@ const UserProfile: React.FC = () => {
             onClick={handleLogout} 
             className="hover:text-gray-900"
           >
-            
+
             Logout
           </button>
         </div>

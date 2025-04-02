@@ -46,7 +46,7 @@ const Footer = () => {
           </div>
           
           <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400">© 2025 MovieMagic. All rights reserved.</p>
+            <p className="text-gray-400">© 2025 WissenEntertainments. All rights reserved.</p>
             <div className="flex space-x-4 mt-4 md:mt-0">
               <a href="#" className="text-gray-400 hover:text-white">
                 <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

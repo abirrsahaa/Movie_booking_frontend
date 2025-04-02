@@ -14,6 +14,7 @@ import "./lib/interceptors"
 import SignupPage from './pages/SignupPage';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
+import ProfileView from './components/ProfileView';
 
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
                 offers={offers} />} />
 
           <Route path="theatres" element={<TheatresPage />} />
+          <Route path="profile" element={<ProfileView/>}/>
 
           <Route path="bookings" element={<BookingsPage />} />
 

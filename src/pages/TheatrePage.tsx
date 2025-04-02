@@ -313,7 +313,7 @@ const TheaterSelection: React.FC = () => {
         </AnimatePresence>
 
         {/* Proceed Button */}
-        <AnimatePresence>
+        {/* <AnimatePresence>
           {selectedShowtime && (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
@@ -333,7 +333,7 @@ const TheaterSelection: React.FC = () => {
               </Button>
             </motion.div>
           )}
-        </AnimatePresence>
+        </AnimatePresence> */}
       </div>
     </div>
   );

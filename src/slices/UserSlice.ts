@@ -9,13 +9,22 @@ interface DecodedToken {
   // Add other token fields as needed
 }
 
+// Update Profile Input Interface
+interface UpdateProfileInput {
+  name?: string;
+  email?: string;
+  phone?: string;
+}
+
 // User State Interface
 interface UserState {
   userData: {
     id: number;
     email: string;
     name?: string;
+    phone?: string;
     avatar?: string;
+    createdAt?: string;
   } | null;
   token: string | null;
   isAuthenticated: boolean;
@@ -71,6 +80,41 @@ export const authenticateUser = createAsyncThunk(
   }
 );
 
+// Async Thunk for Updating Profile
+export const updateProfile = createAsyncThunk(
+  'user/updateProfile',
+  async (profileData: UpdateProfileInput, { getState, rejectWithValue }) => {
+    const state = getState() as { user: UserState };
+    const token = state.user.token;
+
+    if (!token) {
+      return rejectWithValue('No authentication token');
+    }
+
+    try {
+      const response = await axios.put(
+        'http://localhost:9090/api/user/update', 
+        profileData,
+        {
+          headers: { 
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(
+          error.response?.data?.message || 'Failed to update profile'
+        );
+      }
+      return rejectWithValue('An unexpected error occurred');
+    }
+  }
+);
+
 // Logout Thunk
 export const logout = createAsyncThunk(
   'user/logout',
@@ -93,6 +137,7 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Authentication Cases
       .addCase(authenticateUser.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -108,6 +153,24 @@ const userSlice = createSlice({
         state.userData = null;
         state.token = null;
         state.isAuthenticated = false;
+        state.error = action.payload as string;
+      })
+      
+      // Update Profile Cases
+      .addCase(updateProfile.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.isLoading = false;
+        // Update user data with the response from the server
+        state.userData = {
+          ...state.userData,
+          ...action.payload
+        };
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
+        state.isLoading = false;
         state.error = action.payload as string;
       });
   }
