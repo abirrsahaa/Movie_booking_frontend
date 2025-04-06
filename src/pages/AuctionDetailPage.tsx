@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-
+import axios from "axios";
+import { Client as StompClient } from "@stomp/stompjs";
 import { Auction, Bid } from "@/types";
 
 import { Button } from "@/components/ui/button";
@@ -11,13 +12,16 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { mockAuctions } from "@/constants/mockData";
-// import Layout from "@/components/AuctionPage/Layout";
 import CountdownTimer from "@/components/AuctionPage/CountDownTimer";
 import BidHistory from "@/components/AuctionPage/BidHistory";
 import PlaceBidForm from "@/components/AuctionPage/PlaceBidForm";
+import { useAppSelector } from "@/store/store";
+
+const SOCKET_URL = "http://localhost:9090/ws"; // WebSocket endpoint
+const API_URL = "http://localhost:9090/auction/auctionDetails"; // API base URL
 
 const AuctionDetailPage = () => {
+    const { userData, isAuthenticated, isLoading, error } = useAppSelector((state) => state.user);
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const isMobile = useIsMobile();
@@ -27,34 +31,80 @@ const AuctionDetailPage = () => {
     const [isAuctionEnded, setIsAuctionEnded] = useState(false);
 
     useEffect(() => {
-        // Simulating API call to get auction details
-        setLoading(true);
-        setTimeout(() => {
-            const foundAuction = mockAuctions.find((a) => a.id === id);
-            setAuction(foundAuction);
-            setLoading(false);
-        }, 1000);
+        const fetchAuctionDetails = async () => {
+            try {
+                setLoading(true);
+                const response = await axios.get(`${API_URL}/${id}`);
+                setAuction(response.data);
+            } catch (error) {
+                console.error("Error fetching auction details:", error);
+                toast.error("Failed to load auction details.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        // Fetch initial auction details
+        fetchAuctionDetails();
+
+        // WebSocket connection to listen for updates
+        const socket = new SockJS(SOCKET_URL);
+        const client = new StompClient({
+            webSocketFactory: () => socket,
+            reconnectDelay: 5000,
+            debug: (str) => console.log(str),
+            connectionTimeout: 10000,
+        });
+
+        client.onConnect = () => {
+            console.log("Connected to WebSocket server via SockJS");
+            client.subscribe(`/topic/auction/${id}`, async (message) => {
+                console.log("Received WebSocket message:", message.body);
+                // here get the leaderboard
+                // setAuction(updatedAuction);
+                fetchAuctionDetails();
+            });
+        };
+
+        client.onStompError = (frame) => {
+            console.error("STOMP error", frame);
+            toast.error("Connection error. Please try again later.");
+        };
+
+        client.activate();
+
+        // Cleanup WebSocket connection on component unmount
+        return () => {
+            client.deactivate();
+        };
     }, [id]);
 
-    const handlePlaceBid = (amount: number) => {
-        if (!auction) return;
+    const handlePlaceBid = async (amount: number) => {
+        if (!auction || !userData) {
+            toast.error("You must be logged in to place a bid.");
+            return;
+        }
 
-        const newBid: Bid = {
-            id: `bid-${Date.now()}`,
+        const requestBody = {
             auctionId: auction.id,
-            bidder: "You", // In a real app, this would be the logged-in user
+            userId: userData.id, // Assuming `userData.id` contains the logged-in user's ID
             amount: amount,
-            timestamp: new Date(),
         };
 
-        const updatedAuction = {
-            ...auction,
-            currentBid: amount,
-            highestBidder: "You",
-            bids: [...auction.bids, newBid],
-        };
+        try {
+            // Send the bid to the backend
+            const response = await axios.post(`http://localhost:9090/auction/handleBid/${auction.id}`, requestBody);
+            console.log("Bid response:", response.data);
 
-        setAuction(updatedAuction);
+            // Update the auction state with the response from the backend
+            // const updatedAuction = response.data;
+            // setAuction(updatedAuction);
+
+            toast.success("Your bid has been placed successfully!");
+        } catch (error) {
+            console.error("Error placing bid:", error);
+            toast.error("Failed to place bid. Please try again.");
+        }
     };
 
     const handleAuctionEnd = () => {
@@ -64,7 +114,6 @@ const AuctionDetailPage = () => {
 
     if (loading) {
         return (
-
             <div className="container mx-auto px-4 py-12 min-h-screen flex items-center justify-center">
                 <div className="text-center">
                     <div className="animate-pulse flex flex-col items-center">
@@ -73,13 +122,11 @@ const AuctionDetailPage = () => {
                     </div>
                 </div>
             </div>
-
         );
     }
 
     if (!auction) {
         return (
-
             <div className="container mx-auto px-4 py-12 min-h-screen flex flex-col items-center justify-center">
                 <AlertTriangle className="h-16 w-16 text-muted-foreground mb-4" />
                 <h1 className="text-2xl font-bold mb-2">Auction Not Found</h1>
@@ -91,12 +138,10 @@ const AuctionDetailPage = () => {
                     Back to Auctions
                 </Button>
             </div>
-
         );
     }
 
     return (
-
         <div className="container mx-auto px-4 py-8">
             <Button
                 variant="ghost"
@@ -127,13 +172,16 @@ const AuctionDetailPage = () => {
                         <div className="flex-1">
                             <div className="flex justify-between items-start gap-4">
                                 <h1 className="text-3xl font-bold mb-2">{auction.movieTitle}</h1>
-                                {!isMobile && (
+                                {/* {!isMobile && (
                                     <CountdownTimer
-                                        endTime={auction.endTime}
-                                        onExpire={handleAuctionEnd}
+                                        endTime={auction?.endTime} // Ensure auction.endTime is a valid Date or string
+                                        onExpire={() => {
+                                            setIsAuctionEnded(true);
+                                            toast.info("This auction has ended!");
+                                        }}
                                         className="mt-1"
                                     />
-                                )}
+                                )} */}
                             </div>
 
                             {isMobile && (
@@ -205,7 +253,7 @@ const AuctionDetailPage = () => {
                     </Card>
 
                     <div className="mb-6">
-                        <BidHistory bids={auction.bids} />
+                        <BidHistory bids={auction.bids || []} />
                     </div>
                 </motion.div>
 
@@ -239,7 +287,6 @@ const AuctionDetailPage = () => {
                 </motion.div>
             </div>
         </div>
-
     );
 };
 

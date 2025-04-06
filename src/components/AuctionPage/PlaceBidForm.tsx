@@ -12,11 +12,11 @@ interface PlaceBidFormProps {
 
 const PlaceBidForm = ({ auction, onPlaceBid }: PlaceBidFormProps) => {
     const [bidAmount, setBidAmount] = useState<number>(
-        auction.currentBid ? auction.currentBid + 10 : auction.basePrice
+        auction.currentBid ? auction.currentBid + 10 : auction.basePrice || 0
     );
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const minBidAmount = auction.currentBid + 10;
+    const minBidAmount = (auction.currentBid ?? 0) + 10;
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();

@@ -14,35 +14,50 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { mockAuctions } from "@/constants/mockData";
+import axios from "axios";
 
 const AuctionsList = () => {
-    const [auctions, setAuctions] = useState<Auction[]>(mockAuctions);
+    const [auctions, setAuctions] = useState<Auction[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [sortBy, setSortBy] = useState("time");
 
+    // !TODO: when we have movie details we can include this feature 
+
+    // useEffect(() => {
+    //     // Filter auctions based on search term
+    //     const filtered = mockAuctions.filter((auction) =>
+    //         auction.movieTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //         auction.theater.toLowerCase().includes(searchTerm.toLowerCase())
+    //     );
+
+    //     // Sort auctions based on sort criteria
+    //     const sorted = [...filtered].sort((a, b) => {
+    //         switch (sortBy) {
+    //             case "price-low":
+    //                 return a.currentBid - b.currentBid;
+    //             case "price-high":
+    //                 return b.currentBid - a.currentBid;
+    //             case "time":
+    //             default:
+    //                 return a.endTime.getTime() - b.endTime.getTime();
+    //         }
+    //     });
+
+    //     setAuctions(sorted);
+    // }, [searchTerm, sortBy]);
     useEffect(() => {
-        // Filter auctions based on search term
-        const filtered = mockAuctions.filter((auction) =>
-            auction.movieTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            auction.theater.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-
-        // Sort auctions based on sort criteria
-        const sorted = [...filtered].sort((a, b) => {
-            switch (sortBy) {
-                case "price-low":
-                    return a.currentBid - b.currentBid;
-                case "price-high":
-                    return b.currentBid - a.currentBid;
-                case "time":
-                default:
-                    return a.endTime.getTime() - b.endTime.getTime();
+        const gettingAuctions = async () => {
+            try {
+                // Fetch auctions from the backend
+                const response = await axios.get("http://localhost:9090/auction/activeAuctions")
+                const data: Auction[] = await response.data;
+                setAuctions(data);
+            } catch (error) {
+                console.error("Error fetching auctions:", error);
             }
-        });
-
-        setAuctions(sorted);
-    }, [searchTerm, sortBy]);
-
+        }
+        gettingAuctions();
+    }, []);
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -52,6 +67,8 @@ const AuctionsList = () => {
             }
         }
     };
+
+    // if (auctions.length === 0) return <div>loading...</div>
 
     return (
         <div className="container mx-auto px-4 py-8">

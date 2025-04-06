@@ -7,10 +7,8 @@ interface BidHistoryProps {
 }
 
 const BidHistory = ({ bids }: BidHistoryProps) => {
-    // Sort bids by timestamp in descending order (newest first)
-    const sortedBids = [...bids].sort(
-        (a, b) => b.timestamp.getTime() - a.timestamp.getTime()
-    );
+    // Sort bids by amount in descending order (highest to lowest)
+    const sortedBids = [...bids].sort((a, b) => (b?.amount ?? 0) - (a.amount ?? 0));
 
     return (
         <div className="bg-muted/30 rounded-lg p-4">
@@ -30,7 +28,7 @@ const BidHistory = ({ bids }: BidHistoryProps) => {
                                 <div className="flex-1">
                                     <span className="font-medium">{bid.bidder}</span>
                                     <p className="text-xs text-muted-foreground">
-                                        {format(bid.timestamp, "MMM d, h:mm a")}
+                                        {format(bid.timestamp ?? new Date(), "MMM d, h:mm a")}
                                     </p>
                                 </div>
                                 <div className="text-right">

@@ -1,22 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 interface CountdownTimerProps {
-    endTime: Date;
+    endTime?: Date | string; // Allow endTime to be a Date or string
     onExpire?: () => void;
     className?: string;
 }
 
-const CountdownTimer = ({ endTime, onExpire, className }: CountdownTimerProps) => {
+const CountdownTimer = ({
+    endTime = new Date(Date.now() + 10 * 60 * 1000), // Default to 10 minutes from now
+    onExpire,
+    className,
+}: CountdownTimerProps) => {
     const [timeLeft, setTimeLeft] = useState<{
         minutes: number;
         seconds: number;
     }>({ minutes: 0, seconds: 0 });
     const [progress, setProgress] = useState(100);
 
+    // Memoize parsedEndTime to prevent unnecessary re-renders
+    const parsedEndTime = useMemo(() => {
+        return typeof endTime === "string" ? new Date(endTime) : endTime;
+    }, [endTime]);
+
     useEffect(() => {
         const calculateTimeLeft = () => {
             const now = new Date();
-            const difference = endTime.getTime() - now.getTime();
+            const difference = parsedEndTime.getTime() - now.getTime();
 
             if (difference <= 0) {
                 setTimeLeft({ minutes: 0, seconds: 0 });
@@ -43,7 +52,7 @@ const CountdownTimer = ({ endTime, onExpire, className }: CountdownTimerProps) =
         const timer = setInterval(calculateTimeLeft, 1000);
 
         return () => clearInterval(timer);
-    }, [endTime, onExpire]);
+    }, [parsedEndTime, onExpire]);
 
     const strokeDashoffset = 440 - (440 * progress) / 100;
 
@@ -71,12 +80,13 @@ const CountdownTimer = ({ endTime, onExpire, className }: CountdownTimerProps) =
                         strokeLinecap="round"
                         style={{
                             strokeDasharray: "440",
-                            strokeDashoffset: `${strokeDashoffset}`
+                            strokeDashoffset: `${strokeDashoffset}`,
                         }}
                     />
                 </svg>
                 <div className="absolute top-0 left-0 flex items-center justify-center w-full h-full text-xs font-medium">
-                    {timeLeft.minutes.toString().padStart(2, '0')}:{timeLeft.seconds.toString().padStart(2, '0')}
+                    {timeLeft.minutes.toString().padStart(2, "0")}:
+                    {timeLeft.seconds.toString().padStart(2, "0")}
                 </div>
             </div>
             <div className="text-xs text-gray-500">

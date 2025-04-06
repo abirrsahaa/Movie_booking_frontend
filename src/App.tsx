@@ -1,3 +1,4 @@
+
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import RootLayout from './layouts/RootLayout';
 import HomePage from './pages/HomePage';
