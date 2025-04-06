@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { format, parseISO, isBefore } from "date-fns";
+// import { format, parseISO, isBefore } from "date-fns";
+import {QRCodeSVG} from 'qrcode.react';
 import { 
   Card, 
   CardContent,
@@ -106,7 +107,7 @@ const MyBookings: React.FC = () => {
         variants={itemVariants}
         className="w-full max-w-sm"
       >
-        <Card className="w-full">
+        <Card className="w-full ">
           <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100 p-4">
             <div className="flex justify-between items-center">
               <CardTitle className="text-xl font-bold text-blue-800">
@@ -116,7 +117,7 @@ const MyBookings: React.FC = () => {
             </div>
           </CardHeader>
           
-          <CardContent className="p-4 space-y-3">
+          <CardContent className="p-4 space-y-3 flex flex-col justify-center items-center">
             <div className="flex items-center space-x-3">
               <MapPinIcon className="w-5 h-5 text-gray-500" />
               <span className="text-gray-700 font-medium">
@@ -144,12 +145,16 @@ const MyBookings: React.FC = () => {
                 Seats: {formatSeats(booking.seats)}
               </span>
             </div>
+
+            <div className="h-[20%] w-[30%] m-2"><QRCodeSVG value={`http://localhost:9090/getBooking/${userData?.id}`} /></div>
           </CardContent>
+
+          
           
           <CardFooter className="bg-gray-50 p-4">
             <Button 
               variant="destructive" 
-              className="w-full"
+              className="w-full bg-blue-800 hover:bg-red-600"
               onClick={() => handleCancelBooking(booking.bookingId)}
             >
               <XIcon className="mr-2 w-4 h-4" /> Cancel Booking
@@ -181,6 +186,8 @@ const MyBookings: React.FC = () => {
             className="flex flex-wrap justify-center items-start gap-6"
           >
             {bookings.map(booking => renderBookingCard(booking))}
+            {/* q r code */}
+            
           </motion.div>
         ) : (
           <EmptyState />

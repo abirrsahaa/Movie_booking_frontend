@@ -113,8 +113,27 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.auction-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.auction-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.1);
+}
+
+.countdown-ring circle {
+  stroke-dasharray: 440;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  transition: stroke-dashoffset 1s linear;
 }

@@ -43,11 +43,11 @@ const UserProfile: React.FC = () => {
 
   return (
     <div className="flex items-center gap-3">
-      <Avatar className="h-10 w-10 bg-gray-200">
+      <Avatar className="h-10 w-10 bg-gray-200 ring-2 ring-blue-800">
         {userData?.avatar ? (
-          <img 
-            src={userData.avatar} 
-            alt={displayName} 
+          <img
+            src={userData.avatar}
+            alt={displayName}
             className="w-full h-full object-cover"
           />
         ) : (
@@ -59,15 +59,15 @@ const UserProfile: React.FC = () => {
       <div className="flex-1">
         <p className="text-sm font-medium">{displayName}</p>
         <div className="flex text-xs text-gray-500 space-x-2">
-          <button 
-            onClick={() => navigate('/main/profile')} 
+          <button
+            onClick={() => navigate('/main/profile')}
             className="hover:text-gray-900"
           >
             View Profile
           </button>
           <span>|</span>
-          <button 
-            onClick={handleLogout} 
+          <button
+            onClick={handleLogout}
             className="hover:text-gray-900"
           >
 

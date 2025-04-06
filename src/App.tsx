@@ -15,46 +15,50 @@ import SignupPage from './pages/SignupPage';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 import ProfileView from './components/ProfileView';
+import AuctionsPage from './pages/AuctionsPage';
+import AuctionDetailPage from './pages/AuctionDetailPage';
 
 
 function App() {
   return (
 
     <Provider store={store}>
-    <Router>
-      <Routes>
-        <Route path="/main" element={<RootLayout />}>
-           
+      <Router>
+        <Routes>
+          <Route path="/main" element={<RootLayout />}>
 
-          <Route index element={<HomePage />} />
 
-          <Route path="movies" element={<MoviesPage />} />
+            <Route index element={<HomePage />} />
 
-          <Route path="moviesSpecific/:id" element={<MovieDetailsPage 
-                movie={movie}
-                dates={dates}
-                cinemas={cinemas}
-                reviews={reviews}
-                offers={offers} />} />
+            <Route path="movies" element={<MoviesPage />} />
 
-          <Route path="theatres" element={<TheatresPage />} />
-          <Route path="profile" element={<ProfileView/>}/>
+            <Route path="moviesSpecific/:id" element={<MovieDetailsPage
+              movie={movie}
+              dates={dates}
+              cinemas={cinemas}
+              reviews={reviews}
+              offers={offers} />} />
 
-          <Route path="bookings" element={<BookingsPage />} />
+            <Route path="theatres" element={<TheatresPage />} />
+            <Route path="profile" element={<ProfileView />} />
+            <Route path="auctions" element={<AuctionsPage />} />
+            <Route path="auction/:id" element={<AuctionDetailPage />} />
 
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Route>
+            <Route path="bookings" element={<BookingsPage />} />
+
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Route>
 
           <Route path="/" element={<AuthLayout />}>
-            <Route index  element={ <SignupPage/> } />
+            <Route index element={<SignupPage />} />
             <Route path='login' element={<LoginPage />} />
             <Route path='verify-otp' element={<VerifyOtp />} />
-          </Route> 
+          </Route>
 
 
 
-      </Routes>
-    </Router>
+        </Routes>
+      </Router>
     </Provider>
   );
 

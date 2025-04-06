@@ -40,7 +40,7 @@ const NowShowing: React.FC = () => {
     <div className="px-4">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold">Now Showing</h2>
-        <Link to="/movies" className="text-red-500 hover:underline">
+        <Link to="/movies" className="text-blue-800 hover:underline">
           View All
         </Link>
       </div>
@@ -62,29 +62,29 @@ const NowShowing: React.FC = () => {
               className="transform transition-transform duration-200"
             >
               <Card className="flex flex-col h-full overflow-hidden">
-              <Link to={`/main/moviesSpecific/${movie.id}`} className="relative">
-  <div className="relative">
-    <img
-      src={movie.image}
-      alt={movie.title}
-      className="w-full h-64 object-cover"
-    />
-    {movie.isNew && (
-      <Badge className="absolute top-2 left-2 bg-red-500 text-white">
-        NEW
-      </Badge>
-    )}
-  </div>
-</Link>
+                <Link to={`/main/moviesSpecific/${movie.id}`} className="relative">
+                  <div className="relative">
+                    <img
+                      src={movie.image}
+                      alt={movie.title}
+                      className="w-full h-64 object-cover"
+                    />
+                    {movie.isNew && (
+                      <Badge className="absolute top-2 left-2 bg-red-500 text-white">
+                        NEW
+                      </Badge>
+                    )}
+                  </div>
+                </Link>
 
                 <CardContent className="flex flex-col flex-grow p-4">
-                  <h3 className="text-lg font-semibold mb-2">{movie.title}</h3>
+                  <h3 className="text-lg text-blue-800 font-semibold mb-2">{movie.title}</h3>
                   <div className="mb-4">
                     <Badge variant="secondary">{movie.type}</Badge>
                   </div>
                   <div className="mt-auto">
                     <Button
-                      className="w-full bg-red-500 hover:bg-red-600 text-white"
+                      className="w-full bg-blue-700 hover:bg-blue-800 text-white"
                       asChild
                     >
                       <Link to={`/main/moviesSpecific/${movie.id}`}>Book</Link>

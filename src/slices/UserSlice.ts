@@ -12,7 +12,7 @@ interface DecodedToken {
 // Update Profile Input Interface
 interface UpdateProfileInput {
   name?: string;
-  email?: string;
+
   phone?: string;
 }
 
@@ -47,7 +47,7 @@ export const authenticateUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     const token = localStorage.getItem('token');
     console.log(token);
-    
+
     if (!token) {
       return rejectWithValue('No token found');
     }
@@ -58,11 +58,11 @@ export const authenticateUser = createAsyncThunk(
       console.log(decoded);
 
       // Fetch user details using email from token
-      const stringg='http://localhost:9090/api/user/'+decoded.email;
+      const stringg = 'http://localhost:9090/api/user/' + decoded.email;
       console.log(stringg);
-      const response = await axios.get('http://localhost:9090/api/user/'+decoded.email, {
-        headers: { 
-          Authorization: `Bearer ${token}` 
+      const response = await axios.get('http://localhost:9090/api/user/' + decoded.email, {
+        headers: {
+          Authorization: `Bearer ${token}`
         }
       });
 
@@ -91,19 +91,33 @@ export const updateProfile = createAsyncThunk(
       return rejectWithValue('No authentication token');
     }
 
+    console.log(profileData);
+
     try {
-      const response = await axios.put(
-        'http://localhost:9090/api/user/update', 
+      const res = await axios.put(
+        'http://localhost:9090/api/user/update',
         profileData,
         {
-          headers: { 
+          headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         }
       );
+      console.log("the res is ", res.data);
+
+      const decoded = jwtDecode<DecodedToken>(token);
+      const response = await axios.get(`http://localhost:9090/api/user/${decoded.email}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
 
       return response.data;
+
+
+
+      // return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
         return rejectWithValue(
@@ -155,7 +169,7 @@ const userSlice = createSlice({
         state.isAuthenticated = false;
         state.error = action.payload as string;
       })
-      
+
       // Update Profile Cases
       .addCase(updateProfile.pending, (state) => {
         state.isLoading = true;
