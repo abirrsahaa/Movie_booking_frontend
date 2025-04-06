@@ -13,7 +13,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { mockAuctions } from "@/constants/mockData";
+// import { mockAuctions } from "@/constants/mockData";
 import axios from "axios";
 
 const AuctionsList = () => {

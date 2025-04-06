@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { Client as StompClient } from "@stomp/stompjs";
-import { Auction, Bid } from "@/types";
+import { Auction } from "@/types";
 
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
