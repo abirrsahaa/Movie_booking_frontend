@@ -22,6 +22,12 @@ const CountdownTimer = ({
         return typeof endTime === "string" ? new Date(endTime) : endTime;
     }, [endTime]);
 
+    // Calculate the initial total duration once (difference between start and end)
+    const totalDurationRef = useMemo(() => {
+        const startTime = new Date();
+        return parsedEndTime.getTime() - startTime.getTime();
+    }, [parsedEndTime]);
+
     useEffect(() => {
         const calculateTimeLeft = () => {
             const now = new Date();
@@ -29,17 +35,13 @@ const CountdownTimer = ({
 
             if (difference <= 0) {
                 setTimeLeft({ minutes: 0, seconds: 0 });
+                setProgress(0);
                 onExpire?.();
                 return;
             }
 
-            // Calculate full duration (10 minutes in milliseconds)
-            const fullDuration = 10 * 60 * 1000;
-            // Calculate elapsed time
-            const elapsed = fullDuration - difference;
-            // Calculate progress percentage (inversely)
-            const newProgress = 100 - (elapsed / fullDuration) * 100;
-
+            // Calculate progress based on the actual duration
+            const newProgress = (difference / totalDurationRef) * 100;
             setProgress(Math.max(0, newProgress));
 
             const minutes = Math.floor(difference / 60000);
@@ -52,7 +54,7 @@ const CountdownTimer = ({
         const timer = setInterval(calculateTimeLeft, 1000);
 
         return () => clearInterval(timer);
-    }, [parsedEndTime, onExpire]);
+    }, [parsedEndTime, onExpire, totalDurationRef]);
 
     const strokeDashoffset = 440 - (440 * progress) / 100;
 

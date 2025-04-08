@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 // import { format, parseISO, isBefore } from "date-fns";
-import {QRCodeSVG} from 'qrcode.react';
-import { 
-  Card, 
+import { QRCodeSVG } from 'qrcode.react';
+import {
+  Card,
   CardContent,
   CardFooter,
   CardHeader,
@@ -13,6 +13,8 @@ import { Button } from "@/components/ui/button";
 import { TicketIcon, MapPinIcon, CalendarIcon, ClockIcon, XIcon } from "lucide-react";
 import axios from 'axios';
 import { useAppSelector } from "@/store/store";
+import { Navigate, useNavigate } from "react-router-dom";
+import { head } from "lodash";
 
 // Updated interfaces to match the new data structure
 interface Booking {
@@ -25,9 +27,9 @@ interface Booking {
 // Animation variants
 const containerVariants = {
   hidden: { opacity: 0 },
-  visible: { 
+  visible: {
     opacity: 1,
-    transition: { 
+    transition: {
       staggerChildren: 0.1,
     }
   }
@@ -35,8 +37,8 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { y: 20, opacity: 0 },
-  visible: { 
-    y: 0, 
+  visible: {
+    y: 0,
     opacity: 1,
     transition: { type: "spring", stiffness: 100 }
   }
@@ -46,6 +48,8 @@ const MyBookings: React.FC = () => {
   const { userData } = useAppSelector((state) => state.user);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -80,6 +84,36 @@ const MyBookings: React.FC = () => {
       console.error('Error cancelling booking:', error);
     }
   };
+
+  const createAuctionHandler = async (bookingId: number) => {
+    try {
+
+      const data = {
+        bookingId: bookingId,
+        userId: userData?.id,
+        showtime: new Date().getTime(),
+        minAmount: 200
+
+      }
+
+      console.log(data);
+
+      // i need to make it dynamic
+      const response = await axios.post(`http://localhost:9090/auction/createAuction`, data,
+        {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      console.log(response.data);
+      navigate('/main/auctions');
+
+    } catch (error) {
+      console.error('Error creating auction:', error);
+    }
+  }
 
   // Empty state component
   const EmptyState: React.FC = () => (
@@ -116,7 +150,7 @@ const MyBookings: React.FC = () => {
               <TicketIcon className="w-6 h-6 text-blue-600" />
             </div>
           </CardHeader>
-          
+
           <CardContent className="p-4 space-y-3 flex flex-col justify-center items-center">
             <div className="flex items-center space-x-3">
               <MapPinIcon className="w-5 h-5 text-gray-500" />
@@ -124,21 +158,21 @@ const MyBookings: React.FC = () => {
                 {booking.theatreName}
               </span>
             </div>
-            
+
             <div className="flex items-center space-x-3">
               <CalendarIcon className="w-5 h-5 text-gray-500" />
               <span className="text-gray-700">
                 Date: {new Date().toLocaleDateString()}
               </span>
             </div>
-            
+
             <div className="flex items-center space-x-3">
               <ClockIcon className="w-5 h-5 text-gray-500" />
               <span className="text-gray-700">
                 Time: {booking.showtime}
               </span>
             </div>
-            
+
             <div className="flex items-center space-x-3">
               <TicketIcon className="w-5 h-5 text-gray-500" />
               <span className="text-gray-700">
@@ -147,13 +181,16 @@ const MyBookings: React.FC = () => {
             </div>
 
             <div className="h-[20%] w-[30%] m-2"><QRCodeSVG value={`http://localhost:9090/getBooking/${userData?.id}`} /></div>
+            <Button variant="outline" className="w-full mt-2" onClick={() => createAuctionHandler(booking.bookingId)}>
+              SELL THIS !!!
+            </Button>
           </CardContent>
 
-          
-          
+
+
           <CardFooter className="bg-gray-50 p-4">
-            <Button 
-              variant="destructive" 
+            <Button
+              variant="destructive"
               className="w-full bg-blue-800 hover:bg-red-600"
               onClick={() => handleCancelBooking(booking.bookingId)}
             >
@@ -167,7 +204,7 @@ const MyBookings: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen bg-gray-50 p-6">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         className="mb-8 text-center"
@@ -187,7 +224,7 @@ const MyBookings: React.FC = () => {
           >
             {bookings.map(booking => renderBookingCard(booking))}
             {/* q r code */}
-            
+
           </motion.div>
         ) : (
           <EmptyState />
