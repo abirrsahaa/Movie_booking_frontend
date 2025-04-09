@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Home, Film, Building2, BookText } from 'lucide-react';
 import UserProfile from '../components/layout/UserProfile';
+import { RiAuctionLine } from "react-icons/ri";
 import { cn } from '../lib/utils';
 
 interface NavItem {
@@ -19,6 +20,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPath }) => {
     { title: 'Movies', path: '/main/movies', icon: Film },
     { title: 'Theatres', path: '/main/theatres', icon: Building2 },
     { title: 'My Bookings', path: '/main/bookings', icon: BookText },
+    { title: 'Auctions', path: '/main/auctions', icon: RiAuctionLine },
   ];
 
   return (
