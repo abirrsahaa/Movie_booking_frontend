@@ -17,7 +17,7 @@ import BidHistory from "@/components/AuctionPage/BidHistory";
 import PlaceBidForm from "@/components/AuctionPage/PlaceBidForm";
 import { useAppSelector } from "@/store/store";
 
-const SOCKET_URL = "http://localhost:9090/ws"; // WebSocket endpoint
+export const SOCKET_URL = "http://localhost:9090/ws"; // WebSocket endpoint
 const API_URL = "http://localhost:9090/auction/auctionDetails"; // API base URL
 
 const AuctionDetailPage = () => {
@@ -58,11 +58,20 @@ const AuctionDetailPage = () => {
 
         client.onConnect = () => {
             console.log("Connected to WebSocket server via SockJS");
+            // idhar changes karne hai according to requirements 
             client.subscribe(`/topic/auction/${id}`, async (message) => {
                 console.log("Received WebSocket message:", message.body);
                 // here get the leaderboard
                 // setAuction(updatedAuction);
                 fetchAuctionDetails();
+            });
+
+            client.subscribe(`/topic/auction-updates`, async (message) => {
+                console.log("Received auction updates:", message.body);
+                alert("Auction updated!check your payments page for more details");
+                // here get the leaderboard
+                // setAuction(updatedAuction);
+                // fetchAuctionDetails();
             });
         };
 
@@ -172,7 +181,7 @@ const AuctionDetailPage = () => {
                         <div className="flex-1">
                             <div className="flex justify-between items-start gap-4">
                                 <h1 className="text-3xl font-bold mb-2">{auction.movieTitle}</h1>
-                                {/* {!isMobile && (
+                                {!isMobile && (
                                     <CountdownTimer
                                         endTime={auction?.endTime} // Ensure auction.endTime is a valid Date or string
                                         onExpire={() => {
@@ -181,7 +190,7 @@ const AuctionDetailPage = () => {
                                         }}
                                         className="mt-1"
                                     />
-                                )} */}
+                                )}
                             </div>
 
                             {isMobile && (
