@@ -39,15 +39,17 @@ export default function IntegratedAuctionUI() {
             console.log("Fetching pending payments for user:", userData.id);
             const response = await axios.get(`http://localhost:9090/auction/pending-payment/${userData.id}`);
             console.log("Fetched pending payments:", response.data);
-            setAuctions(response.data);
+            // Handle the response whether it's empty or not
+            setAuctions(response.data || []);
         } catch (error) {
             console.error("Error fetching pending payments:", error);
             toast.error("Failed to fetch pending payments");
+            // Set to empty array on error
+            setAuctions([]);
         } finally {
             setLoading(false);
         }
     };
-
     // Initial data fetch
     useEffect(() => {
         if (userData?.id) {
@@ -68,6 +70,14 @@ export default function IntegratedAuctionUI() {
         client.onConnect = () => {
             console.log("Connected to WebSocket server via SockJS");
             client.subscribe(`/topic/auction-updates`, async (message) => {
+                console.log("Received auction updates:", message.body);
+                fetchPendingPayments();
+                toast.info("Hey you got some winnings bud!", {
+                    duration: 5000,
+                    icon: <Sparkles className="h-5 w-5 text-amber-400" />
+                });
+            });
+            client.subscribe(`/topic/auction-Accept-updates`, async (message) => {
                 console.log("Received auction updates:", message.body);
                 fetchPendingPayments();
                 toast.info("Hey you got some winnings bud!", {

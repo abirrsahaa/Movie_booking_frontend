@@ -1,252 +1,3 @@
-// import React from "react";
-// import { Button } from "@/components/ui/button";
-// import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-// import { Separator } from "@/components/ui/separator";
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-// import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-// import { AlertCircle, CreditCard, Wallet, X } from "lucide-react";
-// import {motion} from "framer-motion";
-// import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
-// import { prices } from "@/constants/FixedData";
-// import { PaymentStepProps } from "@/interfaces/interfaces_All";
-
-
-
-
-// const PaymentStep: React.FC<PaymentStepProps> = ({
-//   movie,
-//   cinema,
-//   showtime,
-//   selectedSeats,
-//   setStep,
-//   convenienceFee,
-//   grandTotal,
-//   paymentMethod,
-//   setPaymentMethod,
-//   processPayment,
-//   isProcessing,
-//   error
-
-// }) => {
-//   return (
-//     <motion.div
-//     key="payment"
-//     initial={{ opacity: 0, x: 20 }}
-//     animate={{ opacity: 1, x: 0 }}
-//     exit={{ opacity: 0, x: -20 }}
-//     transition={{ duration: 0.2 }}
-//   >
-//     <DialogHeader className="px-6 pt-6 pb-2">
-//       <div className="flex justify-between items-start">
-//         <div>
-//           <DialogTitle className="text-lg">Payment</DialogTitle>
-//           <p className="text-sm text-zinc-500 mt-1">
-//             Complete your booking
-//           </p>
-//         </div>
-//         <Button variant="ghost" size="icon" onClick={() => setStep('seats')}>
-//           <X className="h-4 w-4" />
-//         </Button>
-//       </div>
-//     </DialogHeader>
-
-//     <div className="p-6">
-//       <div className="space-y-6">
-//         <Card>
-//           <CardHeader className="py-4">
-//             <CardTitle className="text-base">Booking Summary</CardTitle>
-//           </CardHeader>
-//           <CardContent className="py-0">
-//             <div className="space-y-3">
-//               <div className="flex justify-between">
-//                 <span className="text-sm text-zinc-600 dark:text-zinc-400">{movie.title}</span>
-//                 <span className="text-sm">{cinema?.name || 'N/A'}</span>
-//               </div>
-//               <div className="flex justify-between">
-//                 <span className="text-sm text-zinc-600 dark:text-zinc-400">
-//                   {showtime ? `${showtime.time} ` : 'N/A'}
-//                 </span>
-//                 <span className="text-sm">{selectedSeats.length} {selectedSeats.length === 1 ? 'Ticket' : 'Tickets'}</span>
-//               </div>
-//               <div className="flex justify-between">
-//                 <span className="text-sm text-zinc-600 dark:text-zinc-400">Seats</span>
-//                 <span className="text-sm">{selectedSeats.map(seat => (seat.seatRow || '') + seat.seatNumber).join(', ')}</span>
-//               </div>
-//             </div>
-//           </CardContent>
-//         </Card>
-
-//         <Card>
-//           <CardHeader className="py-4">
-//             <CardTitle className="text-base">Price Details</CardTitle>
-//           </CardHeader>
-//           <CardContent className="py-0">
-//             <div className="space-y-3">
-//               {Object.keys(prices).map(section => {
-//                 const sectionSeats = selectedSeats.filter(seat => seat.section === section);
-//                 if (sectionSeats.length === 0) return null;
-
-//                 return (
-//                   <div key={section} className="flex justify-between">
-//                     <span className="text-sm text-zinc-600 dark:text-zinc-400">
-//                       {section} ({sectionSeats.length} {sectionSeats.length === 1 ? 'Ticket' : 'Tickets'})
-//                     </span>
-//                     <span className="text-sm">₹{sectionSeats.length * prices[section]}</span>
-//                   </div>
-//                 );
-//               })}
-
-//               <div className="flex justify-between">
-//                 <span className="text-sm text-zinc-600 dark:text-zinc-400">Convenience Fee</span>
-//                 <span className="text-sm">₹{convenienceFee}</span>
-//               </div>
-
-//               <Separator className="my-2" />
-
-//               <div className="flex justify-between font-medium">
-//                 <span>Total Amount</span>
-//                 <span>₹{grandTotal}</span>
-//               </div>
-//             </div>
-//           </CardContent>
-//         </Card>
-
-//         {/* <Card>
-//           <CardHeader className="py-4">
-//             <CardTitle className="text-base">Payment Method</CardTitle>
-//           </CardHeader>
-//           <CardContent className="py-0">
-//             <Tabs value={paymentMethod} onValueChange={(value) => setPaymentMethod(value as "card" | "wallet")}>
-//               <TabsList className="grid grid-cols-2 mb-4">
-//                 <TabsTrigger value="card">Credit/Debit Card</TabsTrigger>
-//                 <TabsTrigger value="wallet">Digital Wallet</TabsTrigger>
-//               </TabsList>
-
-//               <TabsContent value="card" className="space-y-4">
-//                 <div className="grid grid-cols-2 gap-4">
-//                   <div className="col-span-2">
-//                     <label className="text-sm font-medium block mb-1">Card Number</label>
-//                     <input 
-//                       type="text" 
-//                       placeholder="1234 5678 9012 3456"
-//                       className="w-full p-2 border rounded-md"
-//                     />
-//                   </div>
-//                   <div>
-//                     <label className="text-sm font-medium block mb-1">Expiry Date</label>
-//                     <input 
-//                       type="text" 
-//                       placeholder="MM/YY"
-//                       className="w-full p-2 border rounded-md"
-//                     />
-//                   </div>
-//                   <div>
-//                     <label className="text-sm font-medium block mb-1">CVV</label>
-//                     <input 
-//                       type="text" 
-//                       placeholder="123"
-//                       className="w-full p-2 border rounded-md"
-//                     />
-//                   </div>
-//                   <div className="col-span-2">
-//                     <label className="text-sm font-medium block mb-1">Name on Card</label>
-//                     <input 
-//                       type="text" 
-//                       placeholder="John Doe"
-//                       className="w-full p-2 border rounded-md"
-//                     />
-//                   </div>
-//                 </div>
-//               </TabsContent>
-
-//               <TabsContent value="wallet" className="space-y-4">
-//                 <div className="grid grid-cols-2 gap-4">
-//                   <div className="border rounded-md p-3 flex items-center gap-2 cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800">
-//                     <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-//                       <Wallet className="w-4 h-4 text-red-600" />
-//                     </div>
-//                     <div>
-//                       <p className="text-sm font-medium">PayTM</p>
-//                     </div>
-//                   </div>
-//                   <div className="border rounded-md p-3 flex items-center gap-2 cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800">
-//                     <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-//                       <Wallet className="w-4 h-4 text-green-600" />
-//                     </div>
-//                     <div>
-//                       <p className="text-sm font-medium">PhonePe</p>
-//                     </div>
-//                   </div>
-//                   <div className="border rounded-md p-3 flex items-center gap-2 cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800">
-//                     <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-//                       <Wallet className="w-4 h-4 text-purple-600" />
-//                     </div>
-//                     <div>
-//                       <p className="text-sm font-medium">GPay</p>
-//                     </div>
-//                   </div>
-//                   <div className="border rounded-md p-3 flex items-center gap-2 cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800">
-//                     <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
-//                       <Wallet className="w-4 h-4 text-red-600" />
-//                     </div>
-//                     <div>
-//                       <p className="text-sm font-medium">AmazonPay</p>
-//                     </div>
-//                   </div>
-//                 </div>
-//               </TabsContent>
-//             </Tabs>
-//           </CardContent>
-//         </Card> */}
-
-//         {error && (
-//           <Alert variant="destructive">
-//             <AlertCircle className="h-4 w-4" />
-//             <AlertTitle>Payment Error</AlertTitle>
-//             <AlertDescription>{error}</AlertDescription>
-//           </Alert>
-//         )}
-//       </div>
-//     </div>
-
-//     <CardFooter className="bg-zinc-50 dark:bg-zinc-900 p-6 border-t">
-//       <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-//         <div>
-//           <p className="font-medium">Total: ₹{grandTotal}</p>
-//           <p className="text-sm text-zinc-500">Including all taxes</p>
-//         </div>
-//         <div className="flex gap-2">
-//           <Button 
-//             variant="outline" 
-//             onClick={() => setStep('seats')}
-//           >
-//             Back
-//           </Button>
-//           <Button 
-//             onClick={processPayment}
-//             disabled={isProcessing}
-//             className="bg-red-600 hover:bg-red-700"
-//           >
-//             {isProcessing ? (
-//               <>Processing...</>
-//             ) : (
-//               <>
-//                 <CreditCard className="mr-2 h-4 w-4" /> Pay ₹{grandTotal}
-//               </>
-//             )}
-//           </Button>
-//         </div>
-//       </div>
-//     </CardFooter>
-//   </motion.div>
-//   );
-// };
-
-// export default PaymentStep;
-
-
-
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -273,33 +24,34 @@ const PaymentStep: React.FC<PaymentStepProps> = ({
   const [discount, setDiscount] = useState<number>(0); // State to store the discount amount
   const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null); // State to track the applied coupon
 
+
+  // Define coupons data
+  const availableCoupons = [
+    { code: "WISSEN12", discount: 150, minAmount: 500 },
+    { code: "HUSTLERS3", discount: 80, minAmount: 400 },
+    { code: "MANN123", discount: 50, minAmount: 200 }
+  ];
+
   // Function to handle coupon application
-  const applyCoupon = (coupon: string) => {
-    if (appliedCoupon === coupon) {
+  const applyCoupon = (couponCode: string) => {
+    if (appliedCoupon === couponCode) {
       alert("This coupon is already applied!");
       return;
     }
 
-    if (coupon === "WISSEN12" && grandTotal > 500) {
-      setDiscount(150); // Apply a discount of ₹150
-      setAppliedCoupon("WISSEN12");
-    } else if (coupon === "HUSTLERS3" && grandTotal > 400) {
-      setDiscount(80); // Apply a discount of ₹80
-      setAppliedCoupon("HUSTLERS3");
-    } else if (coupon === "MANN123" && grandTotal > 200) {
-      setDiscount(50); // Apply a discount of ₹50
-      setAppliedCoupon("MANN123");
+    const coupon = availableCoupons.find(c => c.code === couponCode);
+
+    if (coupon && grandTotal >= coupon.minAmount) {
+      setDiscount(coupon.discount);
+      setAppliedCoupon(couponCode);
     }
   };
 
   // Function to check if a coupon is valid
-  const isCouponValid = (coupon: string): boolean => {
-    if (coupon === "WISSEN12" && grandTotal > 500) return true;
-    if (coupon === "HUSTLERS3" && grandTotal > 400) return true;
-    if (coupon === "MANN123" && grandTotal > 200) return true;
-    return false;
+  const isCouponValid = (couponCode: string): boolean => {
+    const coupon = availableCoupons.find(c => c.code === couponCode);
+    return coupon ? grandTotal >= coupon.minAmount : false;
   };
-
   return (
     <motion.div
       key="payment"
@@ -315,7 +67,7 @@ const PaymentStep: React.FC<PaymentStepProps> = ({
             <p className="text-sm text-zinc-500 mt-1">Complete your booking</p>
           </div>
           <Button variant="ghost" size="icon" onClick={() => setStep("seats")}>
-            <X className="h-4 w-4" />
+            {/* <X className="h-4 w-4" /> */}
           </Button>
         </div>
       </DialogHeader>
@@ -382,13 +134,13 @@ const PaymentStep: React.FC<PaymentStepProps> = ({
               </div>
             </CardContent>
           </Card>
-
+          {/*
           <Card>
             <CardHeader className="py-4">
               <CardTitle className="text-base">Apply Coupon</CardTitle>
             </CardHeader>
             <CardContent className="py-0">
-              <div className="flex flex-col gap-3"> {/* Updated to align buttons vertically */}
+              <div className="flex flex-col gap-3">
                 {["WISSEN12", "HUSTLERS3", "MANN123"].map((coupon) => (
                   <Button
                     key={coupon}
@@ -403,6 +155,63 @@ const PaymentStep: React.FC<PaymentStepProps> = ({
                   >
                     {coupon}
                   </Button>
+                ))}
+              </div>
+            </CardContent>
+          </Card> */}
+
+          <Card>
+            <CardHeader className="py-4">
+              <CardTitle className="text-base">Apply Coupon</CardTitle>
+            </CardHeader>
+            <CardContent className="py-0">
+              <div className="flex flex-col gap-3">
+                {[
+                  {
+                    code: "WISSEN12",
+                    discount: 150,
+                    minAmount: 500,
+                    description: "Get ₹150 off on orders above ₹500"
+                  },
+                  {
+                    code: "HUSTLERS3",
+                    discount: 80,
+                    minAmount: 400,
+                    description: "Get ₹80 off on orders above ₹400"
+                  },
+                  {
+                    code: "MANN123",
+                    discount: 50,
+                    minAmount: 200,
+                    description: "Get ₹50 off on orders above ₹200"
+                  }
+                ].map((couponData) => (
+                  <div key={couponData.code} className="border rounded-md p-3">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="font-medium">{couponData.code}</span>
+                      <Button
+                        onClick={() => isCouponValid(couponData.code) && applyCoupon(couponData.code)}
+                        disabled={!isCouponValid(couponData.code)}
+                        className={`${appliedCoupon === couponData.code
+                            ? "bg-blue-600 hover:bg-blue-700 text-white"
+                            : !isCouponValid(couponData.code)
+                              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                              : "bg-gray-100 hover:bg-gray-200 text-black"
+                          }`}
+                        size="sm"
+                      >
+                        {appliedCoupon === couponData.code ? "Applied" : "Apply"}
+                      </Button>
+                    </div>
+                    <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                      {couponData.description}
+                    </p>
+                    {!isCouponValid(couponData.code) && grandTotal < couponData.minAmount && (
+                      <p className="text-xs text-red-500 mt-1">
+                        Add ₹{couponData.minAmount - grandTotal} more to use this coupon
+                      </p>
+                    )}
+                  </div>
                 ))}
               </div>
             </CardContent>
