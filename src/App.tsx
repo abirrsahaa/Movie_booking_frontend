@@ -18,6 +18,7 @@ import { store } from './store/store';
 import ProfileView from './components/ProfileView';
 import AuctionsPage from './pages/AuctionsPage';
 import AuctionDetailPage from './pages/AuctionDetailPage';
+import IntegratedAuctionUI from './pages/PendingPaymentPage';
 import Chatbot from './components/Chatbot';
 
 
@@ -47,6 +48,7 @@ function App() {
             <Route path="auction/:id" element={<AuctionDetailPage />} />
 
             <Route path="bookings" element={<BookingsPage />} />
+            <Route path="pending-auctions" element={<IntegratedAuctionUI />} />
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>

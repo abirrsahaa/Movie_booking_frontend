@@ -26,32 +26,32 @@ const PaymentStep: React.FC<PaymentStepProps> = ({
 
 
   // Define coupons data
-const availableCoupons = [
-  { code: "WISSEN12", discount: 150, minAmount: 500 },
-  { code: "HUSTLERS3", discount: 80, minAmount: 400 },
-  { code: "MANN123", discount: 50, minAmount: 200 }
-];
+  const availableCoupons = [
+    { code: "WISSEN12", discount: 150, minAmount: 500 },
+    { code: "HUSTLERS3", discount: 80, minAmount: 400 },
+    { code: "MANN123", discount: 50, minAmount: 200 }
+  ];
 
-// Function to handle coupon application
-const applyCoupon = (couponCode: string) => {
-  if (appliedCoupon === couponCode) {
-    alert("This coupon is already applied!");
-    return;
-  }
+  // Function to handle coupon application
+  const applyCoupon = (couponCode: string) => {
+    if (appliedCoupon === couponCode) {
+      alert("This coupon is already applied!");
+      return;
+    }
 
-  const coupon = availableCoupons.find(c => c.code === couponCode);
-  
-  if (coupon && grandTotal >= coupon.minAmount) {
-    setDiscount(coupon.discount);
-    setAppliedCoupon(couponCode);
-  }
-};
+    const coupon = availableCoupons.find(c => c.code === couponCode);
 
-// Function to check if a coupon is valid
-const isCouponValid = (couponCode: string): boolean => {
-  const coupon = availableCoupons.find(c => c.code === couponCode);
-  return coupon ? grandTotal >= coupon.minAmount : false;
-};
+    if (coupon && grandTotal >= coupon.minAmount) {
+      setDiscount(coupon.discount);
+      setAppliedCoupon(couponCode);
+    }
+  };
+
+  // Function to check if a coupon is valid
+  const isCouponValid = (couponCode: string): boolean => {
+    const coupon = availableCoupons.find(c => c.code === couponCode);
+    return coupon ? grandTotal >= coupon.minAmount : false;
+  };
   return (
     <motion.div
       key="payment"
@@ -134,13 +134,13 @@ const isCouponValid = (couponCode: string): boolean => {
               </div>
             </CardContent>
           </Card>
-{/* 
+          {/*
           <Card>
             <CardHeader className="py-4">
               <CardTitle className="text-base">Apply Coupon</CardTitle>
             </CardHeader>
             <CardContent className="py-0">
-              <div className="flex flex-col gap-3"> 
+              <div className="flex flex-col gap-3">
                 {["WISSEN12", "HUSTLERS3", "MANN123"].map((coupon) => (
                   <Button
                     key={coupon}
@@ -161,62 +161,61 @@ const isCouponValid = (couponCode: string): boolean => {
           </Card> */}
 
           <Card>
-  <CardHeader className="py-4">
-    <CardTitle className="text-base">Apply Coupon</CardTitle>
-  </CardHeader>
-  <CardContent className="py-0">
-    <div className="flex flex-col gap-3">
-      {[
-        { 
-          code: "WISSEN12", 
-          discount: 150, 
-          minAmount: 500, 
-          description: "Get ₹150 off on orders above ₹500" 
-        },
-        { 
-          code: "HUSTLERS3", 
-          discount: 80, 
-          minAmount: 400, 
-          description: "Get ₹80 off on orders above ₹400" 
-        },
-        { 
-          code: "MANN123", 
-          discount: 50, 
-          minAmount: 200, 
-          description: "Get ₹50 off on orders above ₹200" 
-        }
-      ].map((couponData) => (
-        <div key={couponData.code} className="border rounded-md p-3">
-          <div className="flex justify-between items-center mb-2">
-            <span className="font-medium">{couponData.code}</span>
-            <Button
-              onClick={() => isCouponValid(couponData.code) && applyCoupon(couponData.code)}
-              disabled={!isCouponValid(couponData.code)}
-              className={`${
-                appliedCoupon === couponData.code
-                  ? "bg-blue-600 hover:bg-blue-700 text-white"
-                  : !isCouponValid(couponData.code)
-                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  : "bg-gray-100 hover:bg-gray-200 text-black"
-              }`}
-              size="sm"
-            >
-              {appliedCoupon === couponData.code ? "Applied" : "Apply"}
-            </Button>
-          </div>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">
-            {couponData.description}
-          </p>
-          {!isCouponValid(couponData.code) && grandTotal < couponData.minAmount && (
-            <p className="text-xs text-red-500 mt-1">
-              Add ₹{couponData.minAmount - grandTotal} more to use this coupon
-            </p>
-          )}
-        </div>
-      ))}
-    </div>
-  </CardContent>
-</Card>
+            <CardHeader className="py-4">
+              <CardTitle className="text-base">Apply Coupon</CardTitle>
+            </CardHeader>
+            <CardContent className="py-0">
+              <div className="flex flex-col gap-3">
+                {[
+                  {
+                    code: "WISSEN12",
+                    discount: 150,
+                    minAmount: 500,
+                    description: "Get ₹150 off on orders above ₹500"
+                  },
+                  {
+                    code: "HUSTLERS3",
+                    discount: 80,
+                    minAmount: 400,
+                    description: "Get ₹80 off on orders above ₹400"
+                  },
+                  {
+                    code: "MANN123",
+                    discount: 50,
+                    minAmount: 200,
+                    description: "Get ₹50 off on orders above ₹200"
+                  }
+                ].map((couponData) => (
+                  <div key={couponData.code} className="border rounded-md p-3">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="font-medium">{couponData.code}</span>
+                      <Button
+                        onClick={() => isCouponValid(couponData.code) && applyCoupon(couponData.code)}
+                        disabled={!isCouponValid(couponData.code)}
+                        className={`${appliedCoupon === couponData.code
+                            ? "bg-blue-600 hover:bg-blue-700 text-white"
+                            : !isCouponValid(couponData.code)
+                              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                              : "bg-gray-100 hover:bg-gray-200 text-black"
+                          }`}
+                        size="sm"
+                      >
+                        {appliedCoupon === couponData.code ? "Applied" : "Apply"}
+                      </Button>
+                    </div>
+                    <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                      {couponData.description}
+                    </p>
+                    {!isCouponValid(couponData.code) && grandTotal < couponData.minAmount && (
+                      <p className="text-xs text-red-500 mt-1">
+                        Add ₹{couponData.minAmount - grandTotal} more to use this coupon
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
 
           {error && (
             <Alert variant="destructive">

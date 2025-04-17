@@ -1,3 +1,4 @@
+
 export interface Auction {
     id?: string; // Matches Long id in backend
     movieTitle?: string; // Matches String movieTitle
