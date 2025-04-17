@@ -18,6 +18,7 @@ import { store } from './store/store';
 import ProfileView from './components/ProfileView';
 import AuctionsPage from './pages/AuctionsPage';
 import AuctionDetailPage from './pages/AuctionDetailPage';
+import Chatbot from './components/Chatbot';
 
 
 function App() {
@@ -55,10 +56,8 @@ function App() {
             <Route path='login' element={<LoginPage />} />
             <Route path='verify-otp' element={<VerifyOtp />} />
           </Route>
-
-
-
         </Routes>
+         <Chatbot/>
       </Router>
     </Provider>
   );

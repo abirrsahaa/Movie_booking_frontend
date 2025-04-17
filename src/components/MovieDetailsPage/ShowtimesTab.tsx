@@ -82,7 +82,7 @@ const ShowtimesTab:React.FC<ShowtimesTabProps> = ({dates,cinemas,slideUp,stagger
                         onClick={() => onShowtimeSelect(cinema, showtime)}
                       >
                         <ChevronRight className="w-4 h-4 mr-1" />
-                        {showtime.time}  - {showtime.price}
+                        {showtime.time}  - ₹{showtime.price}
                       </Button>
                     ))}
                   </div>

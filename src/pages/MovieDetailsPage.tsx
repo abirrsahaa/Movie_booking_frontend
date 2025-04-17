@@ -41,6 +41,8 @@ const [movie,setMovie]=useState<HomePageMovie|null>(null);
       {/* Hero Section with Parallax Banner */}
      <HeroSection movie={movie} />
      <div className="container mx-auto py-6 px-4">
+
+    
       {/* the tab section is not very important to modify i can do that at will  */}
         <TabsSection
           movie={movie}
@@ -52,6 +54,8 @@ const [movie,setMovie]=useState<HomePageMovie|null>(null);
           slideUp={slideUp}
         />
       </div>
+
+     
       <SeatSelectionComponent
         movie={movie}
         cinema={selectedCinema}

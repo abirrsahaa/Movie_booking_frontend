@@ -44,6 +44,7 @@
     "sockjs": "^0.3.24",
     "sockjs-client": "^1.6.1",
     "sonner": "^2.0.3",
+    "styled-components": "^6.1.17",
     "swiper": "^11.2.6",
     "tailwind-merge": "^3.0.2",
     "tailwindcss": "^4.0.15",

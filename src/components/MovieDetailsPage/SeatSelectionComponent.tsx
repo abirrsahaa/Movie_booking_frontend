@@ -166,12 +166,11 @@ const SeatSelectionComponent: React.FC<SeatSelectionProps> = ({
         // await new Promise(resolve => setTimeout(resolve, 1500));
         
         // Random success (90% chance)
-        if (Math.random() < 0.9) {
+        
           // Here you might want to add actual payment processing logic
-          setStep('confirmation');
-        } else {
-          throw new Error('Payment failed');
-        }
+          if(response.data==true)setStep('confirmation');
+          else throw new Error('Payment failed');
+        
       } catch (paymentError) {
         setError('Payment failed. Please try again.');
         console.log(paymentError);

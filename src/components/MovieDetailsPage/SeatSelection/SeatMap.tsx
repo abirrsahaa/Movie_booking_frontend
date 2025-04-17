@@ -4,7 +4,7 @@ import { CardFooter } from "@/components/ui/card";
 import { Seat, SeatMapProps } from "@/interfaces/interfaces_All";
 import React from "react";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { X } from "lucide-react";
+import { ChevronLeft, X } from "lucide-react";
 
 const SeatMap: React.FC<SeatMapProps> = ({
   movie,
@@ -35,7 +35,7 @@ const SeatMap: React.FC<SeatMapProps> = ({
             </p>
           </div>
           <Button variant="ghost" size="icon" onClick={onClose}>
-            <X className="h-4 w-4" />
+            {/* <ChevronLeft className="h-4 w-4" /> */}
           </Button>
         </div>
       </DialogHeader>
