@@ -5,8 +5,6 @@ import App from './App.tsx'
 import { Button } from './components/ui/button.tsx'
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
     <App />
-    
-  </StrictMode>,
+
 )

@@ -21,7 +21,7 @@ const [movie,setMovie]=useState<HomePageMovie|null>(null);
       setMovie(movieGetting.data);
     }
     getting();
-  },[])
+  },[id])
 
   // movie mujhe diya nahi jayega movie mangwaya jayega 
       const [seatSelectionOpen, setSeatSelectionOpen] = useState(false);
