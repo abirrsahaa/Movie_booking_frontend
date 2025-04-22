@@ -40,6 +40,7 @@ const AuctionDetailPage = () => {
     const [auction, setAuction] = useState<Auction | undefined>(undefined);
     const [loading, setLoading] = useState(true);
     const [isAuctionEnded, setIsAuctionEnded] = useState(false);
+    const [hasShownAuctionEnd, setHasShownAuctionEnd] = useState(false);
     const [bidSuccess, setBidSuccess] = useState(false);
 
     // Animation variants
@@ -157,12 +158,15 @@ const AuctionDetailPage = () => {
     };
 
     const handleAuctionEnd = () => {
+        // Only run once
+        if (hasShownAuctionEnd) return;
+        setHasShownAuctionEnd(true);
         setIsAuctionEnded(true);
         toast.info("This auction has ended!", {
-            icon: <Clock className="h-5 w-5 text-orange-500" />
+            icon: <Clock className="h-5 w-5 text-orange-500" />,
+            duration: 5000,
         });
     };
-
     if (loading) {
         return (
             <div className="container mx-auto px-4 py-12 min-h-screen flex items-center justify-center bg-gradient-to-b from-background to-background/50">

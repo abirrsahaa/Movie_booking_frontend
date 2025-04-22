@@ -20,6 +20,7 @@ import AuctionsPage from './pages/AuctionsPage';
 import AuctionDetailPage from './pages/AuctionDetailPage';
 import IntegratedAuctionUI from './pages/PendingPaymentPage';
 import Chatbot from './components/Chatbot';
+import { Toaster } from 'sonner';
 
 
 function App() {
@@ -58,9 +59,13 @@ function App() {
             <Route path='login' element={<LoginPage />} />
             <Route path='verify-otp' element={<VerifyOtp />} />
           </Route>
+
+
         </Routes>
-         <Chatbot/>
+        <Toaster position="top-center" richColors />
+        <Chatbot />
       </Router>
+
     </Provider>
   );
 

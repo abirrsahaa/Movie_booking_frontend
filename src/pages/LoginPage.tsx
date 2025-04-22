@@ -9,6 +9,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Loader from "@/components/MovieDetailsPage/Loader";
 import axios from "axios";
+import { toast } from "sonner";
+import { Sparkles } from "lucide-react";
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -39,25 +41,41 @@ const LoginPage = () => {
       const response = await axios.post("http://localhost:9090/auth/login", values, {
         withCredentials: true
       });
-
       if (response.status === 200) {
         const token = response.data; // Backend directly returns JWT token
         localStorage.setItem("token", token); // Store in localStorage
-        alert("Login Successful");
+        toast.success("Logged in successfully !", {
+          duration: 5000,
+          icon: <Sparkles className="h-5 w-5 text-amber-400" />
+        });
         navigate("/main"); // Redirect to main page after successful login
       }
     } catch (error: any) {
       if (error.response) {
+        // error.response.data.message || "Login Failed. Please try again."
         // Show error message from backend
-        alert(error.response.data.message || "Login Failed. Please try again.");
+        toast.error(error.response.data.message || "Login Failed. Please try again.", {
+          duration: 5000,
+          icon: <Sparkles className="h-5 w-5 text-amber-400" />
+        });
         navigate("/");
       } else {
-        alert("An unexpected error occurred.");
+        toast.error("An unexpected error occurred.", {
+          duration: 5000,
+          position: "top-center",
+          style: {
+            background: "#ffeded",
+            color: "#d8000c",
+            border: "1px solid #d8000c",
+            fontSize: "1rem",
+          },
+        });
       }
     } finally {
       setIsLoading(false);
     }
   }
+
 
   return (
     <Form {...form}>
