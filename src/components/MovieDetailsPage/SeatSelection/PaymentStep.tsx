@@ -6,8 +6,9 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, CreditCard, X } from "lucide-react";
 import { motion } from "framer-motion";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { prices } from "@/constants/FixedData"; 
+import { prices } from "@/constants/FixedData";
 import { PaymentStepProps } from "@/interfaces/interfaces_All";
+import { toast } from "sonner";
 
 const PaymentStep: React.FC<PaymentStepProps> = ({
   movie,
@@ -35,7 +36,16 @@ const PaymentStep: React.FC<PaymentStepProps> = ({
   // Function to handle coupon application
   const applyCoupon = (couponCode: string) => {
     if (appliedCoupon === couponCode) {
-      alert("This coupon is already applied!");
+      toast.error("This coupon is already applied!", {
+        duration: 5000,
+        position: "top-center",
+        style: {
+          background: "#ffeded",
+          color: "#d8000c",
+          border: "1px solid #d8000c",
+          fontSize: "1rem",
+        },
+      });
       return;
     }
 
@@ -193,10 +203,10 @@ const PaymentStep: React.FC<PaymentStepProps> = ({
                         onClick={() => isCouponValid(couponData.code) && applyCoupon(couponData.code)}
                         disabled={!isCouponValid(couponData.code)}
                         className={`${appliedCoupon === couponData.code
-                            ? "bg-blue-600 hover:bg-blue-700 text-white"
-                            : !isCouponValid(couponData.code)
-                              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                              : "bg-gray-100 hover:bg-gray-200 text-black"
+                          ? "bg-blue-600 hover:bg-blue-700 text-white"
+                          : !isCouponValid(couponData.code)
+                            ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                            : "bg-gray-100 hover:bg-gray-200 text-black"
                           }`}
                         size="sm"
                       >

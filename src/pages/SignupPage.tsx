@@ -9,6 +9,7 @@ import { SignupValidation } from "@/lib/validation";
 import axios from "axios";
 import Loader from "@/components/MovieDetailsPage/Loader";
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 const SignupPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -45,20 +46,48 @@ const SignupPage = () => {
       });
 
       if (response.status === 200) {
-        alert("Please check your email for OTP verification.");
+        toast.success("Please check your email for OTP verification.", {
+          duration: 5000,
+          position: "top-center",
+          style: {
+            background: "#fff",
+            color: "#000",
+            border: "1px solid #000",
+            fontSize: "1rem",
+          },
+        });
         navigate("/verify-otp");
       }
     } catch (error: any) {
       if (error.response) {
         // Show error message from backend
-        alert(error.response.data.message || "Signup failed. Please try again.");
+        toast.error(error.response.data.message || "Signup failed. Please try again.", {
+          duration: 5000,
+          position: "top-center",
+          style: {
+            background: "#ffeded",
+            color: "#d8000c",
+            border: "1px solid #d8000c",
+            fontSize: "1rem",
+          },
+        });
       } else {
-        alert("An unexpected error occurred.");
+        toast.error("An unexpected error occurred.", {
+          duration: 5000,
+          position: "top-center",
+          style: {
+            background: "#ffeded",
+            color: "#d8000c",
+            border: "1px solid #d8000c",
+            fontSize: "1rem",
+          },
+        });
       }
     } finally {
       setIsLoading(false);
     }
   }
+
 
   return (
     <Form {...form}>

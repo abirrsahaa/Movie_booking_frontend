@@ -1,14 +1,15 @@
 import { Button } from "@/components/ui/button"
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
-import {useForm} from "react-hook-form"
-import { Form, FormControl,  FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form"
+import { useForm } from "react-hook-form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { OtpValidation } from "@/lib/validation";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import Loader from "@/components/MovieDetailsPage/Loader";
+import { toast } from "sonner";
 
 const VerifyOtp = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +18,7 @@ const VerifyOtp = () => {
     const form = useForm<z.infer<typeof OtpValidation>>({
         resolver: zodResolver(OtpValidation),
         defaultValues: {
-          otp: "",
+            otp: "",
         },
     });
 
@@ -28,17 +29,43 @@ const VerifyOtp = () => {
             const response = await axios.post("http://localhost:9090/auth/verify-otp", values, {
                 withCredentials: true,
             });
-    
+
             if (response.status === 200) {
-                alert("OTP Verified Successfully!");
+                toast.success("OTP Verified Successfully!", {
+                    duration: 5000,
+                    position: "top-center",
+                    style: {
+                        background: "#fff",
+                        color: "#000",
+                        border: "1px solid #000",
+                        fontSize: "1rem",
+                    },
+                });
                 navigate("/login"); // Navigate to login after successful OTP verification
             }
         } catch (error: any) {
             if (error.response) {
-                // Show error message from backend
-                alert(error.response.data.message || "OTP Validation Failed");
+                toast.error(error.response.data.message || "OTP Validation Failed", {
+                    duration: 5000,
+                    position: "top-center",
+                    style: {
+                        background: "#ffeded",
+                        color: "#d8000c",
+                        border: "1px solid #d8000c",
+                        fontSize: "1rem",
+                    },
+                });
             } else {
-                alert("An unexpected error occurred.");
+                toast.error("An unexpected error occurred.", {
+                    duration: 5000,
+                    position: "top-center",
+                    style: {
+                        background: "#ffeded",
+                        color: "#d8000c",
+                        border: "1px solid #d8000c",
+                        fontSize: "1rem",
+                    },
+                });
             }
         } finally {
             setIsLoading(false);
@@ -60,23 +87,23 @@ const VerifyOtp = () => {
                             <FormItem>
                                 <FormLabel className="">Enter OTP</FormLabel>
                                 <FormControl>
-                                    <Input 
-                                        type="text" 
-                                        className="h-12 bg-[#101012] border-none placeholder:text-[#7878A3] focus-visible:ring-1 focus-visible:ring-offset-1 ring-offset-light-3 !important" 
-                                        {...field} 
+                                    <Input
+                                        type="text"
+                                        className="h-12 bg-[#101012] border-none placeholder:text-[#7878A3] focus-visible:ring-1 focus-visible:ring-offset-1 ring-offset-light-3 !important"
+                                        {...field}
                                     />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
-                    <Button 
-                        type="submit" 
+                    <Button
+                        type="submit"
                         className="bg-[#877EFF] hover:bg-[#877EFF] text-[#FFFFFF] flex gap-2 !important cursor-pointer"
                     >
                         {isLoading ? (
                             <div className="flex gap-2 items-center justify-center">
-                                <Loader/> Loading...
+                                <Loader /> Loading...
                             </div>
                         ) : "Verify"}
                     </Button>

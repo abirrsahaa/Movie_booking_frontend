@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Check, X, Ticket, Calendar, Clock, User, CreditCard, ChevronRight, ChevronDown, ChevronUp, Filter, AlertCircle, Bell, Sparkles } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -33,29 +33,31 @@ export default function IntegratedAuctionUI() {
     const [showFilters, setShowFilters] = useState(false);
 
     // Function to fetch pending payments from the backend
-    const fetchPendingPayments = async () => {
-        if (!isAuthenticated || !userData?.id) return;
+    const fetchPendingPayments = useCallback(async () => {
+        if (!isAuthenticated || !userData?.id) {
+            console.log("User not authenticated or id missing");
+            return;
+        }
+        console.log("Fetching pending payments for user:", userData.id);
         try {
-            console.log("Fetching pending payments for user:", userData.id);
             const response = await axios.get(`http://localhost:9090/auction/pending-payment/${userData.id}`);
             console.log("Fetched pending payments:", response.data);
-            // Handle the response whether it's empty or not
             setAuctions(response.data || []);
         } catch (error) {
             console.error("Error fetching pending payments:", error);
             toast.error("Failed to fetch pending payments");
-            // Set to empty array on error
             setAuctions([]);
         } finally {
             setLoading(false);
         }
-    };
+    }, [isAuthenticated, userData]);
+
     // Initial data fetch
     useEffect(() => {
         if (userData?.id) {
             fetchPendingPayments();
         }
-    }, [userData]);
+    }, [userData, fetchPendingPayments]);
 
     // WebSocket handling for broadcast updates
     useEffect(() => {
@@ -77,9 +79,10 @@ export default function IntegratedAuctionUI() {
                     icon: <Sparkles className="h-5 w-5 text-amber-400" />
                 });
             });
-            client.subscribe(`/topic/auction-Accept-updates`, async (message) => {
+            client.subscribe(`/topic/auction-Accept-updates`, (message) => {
                 console.log("Received auction updates:", message.body);
                 fetchPendingPayments();
+                console.log(" i am here ");
                 toast.info("Hey you got some winnings bud!", {
                     duration: 5000,
                     icon: <Sparkles className="h-5 w-5 text-amber-400" />
@@ -98,12 +101,17 @@ export default function IntegratedAuctionUI() {
             client.deactivate();
         };
 
-    }, []);
+    }, [fetchPendingPayments]);
 
     // API action functions without manual state updates (UI will reflect backend changes via refetch/WebSocket)
     const handleAccept = async (id: number) => {
         try {
             await axios.put(`http://localhost:9090/auction/AuctionWinAcceptResponse/${userData?.id}/${id}`);
+            // toast dalio idhar 
+            toast.success("Hey you accepted.. come on!", {
+                duration: 5000,
+                icon: <Sparkles className="h-5 w-5 text-amber-400" />
+            });
         } catch (error) {
             console.error("Error accepting auction:", error);
             toast.error("Error processing accept request");
@@ -113,6 +121,11 @@ export default function IntegratedAuctionUI() {
     const handleReject = async (id: number) => {
         try {
             await axios.put(`http://localhost:9090/auction/AuctionWinRejectResponse/${userData?.id}/${id}`);
+            // toast dalio idhar 
+            toast.success("Hey you rejected..and we accepted your rejection!", {
+                duration: 5000,
+                icon: <Sparkles className="h-5 w-5 text-amber-400" />
+            });
         } catch (error) {
             console.error("Error rejecting auction:", error);
             toast.error("Error processing reject request");
