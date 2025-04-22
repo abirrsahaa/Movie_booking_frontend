@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-// Styled Components
+import { Mic, MicOff } from 'lucide-react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const ChatbotIcon = styled.button`
   position: fixed;
   bottom: 20px;
@@ -164,7 +167,19 @@ const Input = styled.input`
     color: #6c757d;
   }
 `;
+const HeaderButton = styled.button`
+  background: none;
+  border: none;
+  color: white;
+  padding: 4px;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.2s;
 
+  &:hover {
+    opacity: 1;
+  }
+`;
 const SendButton = styled.button`
   background: #007bff;
   color: white;
@@ -181,15 +196,117 @@ const SendButton = styled.button`
   }
 `;
 
+const VoiceButton = styled.button`
+  background: none;
+  border: none;
+  color: #007bff;
+  padding: 0 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #0056b3;
+  }
+`;
+
 const Chatbot = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const [isListening, setIsListening] = useState(false);
   const [messages, setMessages] = useState([
     { text: 'Welcome to Wissen Entertainments ! How can I assist you?', isBot: true },
     { text: 'Movie Suggestions', isBot: true, isButton: true },
     { text: 'Theaters Nearby', isBot: true, isButton: true },
   ]);
+
+  const clearHistory = () => {
+    setMessages([
+      { text: 'Welcome to Wissen Entertainments ! How can I assist you?', isBot: true },
+      { text: 'Movie Suggestions', isBot: true, isButton: true },
+      { text: 'Theaters Nearby', isBot: true, isButton: true },
+    ]);
+    localStorage.removeItem('chatHistory'); // If you're using localStorage
+  };
+
+  
   const [input, setInput] = useState('');
+  const [recognition, setRecognition] = useState<SpeechRecognition | null>(null);
+  const handleVoiceInput = () => {
+    if (isListening) {
+      // If already listening, stop the recognition
+      if (recognition) {
+        recognition.stop();
+        setIsListening(false);
+        return;
+      }
+    }
+  
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(() => {
+        const recognitionInstance = new (window as any).webkitSpeechRecognition();
+        setRecognition(recognitionInstance);
+        
+        recognitionInstance.continuous = false;
+        recognitionInstance.interimResults = false;
+        recognitionInstance.lang = 'en-US';
+  
+        recognitionInstance.onstart = () => {
+          setIsListening(true);
+          toast.info('Listening...', {
+            position: "top-right",
+            autoClose: 2000,
+          });
+        };
+  
+        recognitionInstance.onresult = (event) => {
+          const transcript = event.results[0][0].transcript;
+          setInput(transcript);
+          setIsListening(false);
+          setRecognition(null);
+        };
+  
+        recognitionInstance.onerror = (event) => {
+          console.error('Speech recognition error:', event.error);
+          setIsListening(false);
+          setRecognition(null);
+          switch (event.error) {
+            case 'not-allowed':
+              toast.error('Microphone access denied. Please check your browser settings.');
+              break;
+            case 'aborted':
+              toast.info('Voice input stopped');
+              break;
+            default:
+              toast.error('Voice input error. Please try again.');
+          }
+        };
+  
+        recognitionInstance.onend = () => {
+          setIsListening(false);
+          setRecognition(null);
+        };
+  
+        recognitionInstance.start();
+      })
+      .catch(error => {
+        console.error('Microphone permission error:', error);
+        toast.error('Please allow microphone access to use voice input');
+        setIsListening(false);
+        setRecognition(null);
+      });
+  };
+  useEffect(() => {
+    return () => {
+      if (recognition) {
+        recognition.stop();
+        setIsListening(false);
+        setRecognition(null);
+      }
+    };
+  }, [recognition]);
 
   const handleButtonClick = async (option) => {
     setMessages([...messages, { text: option, isBot: false }]);
@@ -403,9 +520,14 @@ const handleInputSubmit = async () => {
       {isOpen && (
         <ChatbotContainer>
           <ChatHeader>
-        Wissen Chatbot
-            <CloseButton onClick={() => setIsOpen(false)}>&times;</CloseButton>
-          </ChatHeader>
+  <div>Wissen Chatbot</div>
+  <div style={{ display: 'flex', gap: '8px' }}>
+    <HeaderButton onClick={clearHistory} title="Clear chat history">
+      🗑️
+    </HeaderButton>
+    <CloseButton onClick={() => setIsOpen(false)}>&times;</CloseButton>
+  </div>
+</ChatHeader>
           <ChatArea>
         {messages.map((msg, index) => (
           <div key={index}>
@@ -426,16 +548,22 @@ const handleInputSubmit = async () => {
           </div>
         ))}
       </ChatArea>
-          <InputArea>
-            <Input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleInputSubmit()}
-              placeholder="Type here..."
-            />
-            <SendButton onClick={handleInputSubmit}>&rarr;</SendButton>
-          </InputArea>
+      <InputArea>
+  <Input
+    type="text"
+    value={input}
+    onChange={(e) => setInput(e.target.value)}
+    onKeyPress={(e) => e.key === 'Enter' && handleInputSubmit()}
+    placeholder="Type here..."
+  />
+  <VoiceButton
+    onClick={handleVoiceInput}
+    title={isListening ? 'Stop recording' : 'Start voice input'}
+  >
+    {isListening ? <MicOff size={18} /> : <Mic size={18} />}
+  </VoiceButton>
+  <SendButton onClick={handleInputSubmit}>&rarr;</SendButton>
+</InputArea>
         </ChatbotContainer>
       )}
     </>
@@ -443,3 +571,5 @@ const handleInputSubmit = async () => {
 };
 
 export default Chatbot;
+
+
