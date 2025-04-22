@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
-
+import { useNavigate } from 'react-router-dom';
 // Styled Components
 const ChatbotIcon = styled.button`
   position: fixed;
@@ -25,6 +25,7 @@ const ChatbotIcon = styled.button`
     transform: scale(1.1);
   }
 `;
+
 
 const ChatbotContainer = styled.div`
   position: fixed;
@@ -122,7 +123,13 @@ const Message = styled.div`
     }
   }
 `;
-
+const ClickableMessage = styled(Message)`
+  cursor: pointer;
+  &:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+  }
+`;
 const OptionButton = styled.button`
   background: #007bff;
   color: white;
@@ -175,6 +182,7 @@ const SendButton = styled.button`
 `;
 
 const Chatbot = () => {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     { text: 'Welcome to Wissen Entertainments ! How can I assist you?', isBot: true },
@@ -234,16 +242,21 @@ const Chatbot = () => {
     setMessages([...messages, { text: 'Latest Movies', isBot: false }]);
     try {
       const nowShowing = await axios.get('http://localhost:9090/nowShowing');
-      //const comingSoon = await axios.get('http://localhost:9090/comingSoon');
       setMessages((prev) => [
         ...prev,
         {
-          text: `Latest Movies: ${nowShowing.data.map((m) => m.title).join(', ')}`,
+          text: 'Now Showing Movies:',
           isBot: true,
         },
+        ...nowShowing.data.map(movie => ({
+          text: `• ${movie.title}`,
+          isBot: true,
+          movieId: movie.id,
+          isClickable: true
+        })),
         { text: 'Anything else I can help with?', isBot: true },
       ]);
-    } catch (error) {
+    }  catch (error) {
       setMessages((prev) => [
         ...prev,
         { text: 'Sorry, something went wrong. Try again!', isBot: true },
@@ -254,14 +267,19 @@ const Chatbot = () => {
   const handleComingSoonMovies = async () => {
     setMessages([...messages, { text: 'ComingSoon Movies', isBot: false }]);
     try {
-      //const nowShowing = await axios.get('http://localhost:9090/nowShowing');
       const comingSoon = await axios.get('http://localhost:9090/comingSoon');
       setMessages((prev) => [
         ...prev,
         {
-          text: `Coming Soon: ${comingSoon.data.map((m) => m.title).join(', ')}`,
+          text: 'Coming Soon Movies:',
           isBot: true,
         },
+        ...comingSoon.data.map(movie => ({
+          text: `• ${movie.title}`,
+          isBot: true,
+          movieId: movie.id,
+          isClickable: true
+        })),
         { text: 'Anything else I can help with?', isBot: true },
       ]);
     } catch (error) {
@@ -281,20 +299,53 @@ const handleInputSubmit = async () => {
       .reverse()
       .find(msg => msg.isBot && !msg.isButton)?.text || '';
   
-    try {
-      if (lastBotMessage.includes('Which genre?')) {  // Changed this condition
-        const response = await axios.get(`http://localhost:9090/moviesByGenre/${input}`);
-        const movies = response.data;
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: movies.length
-              ? `Here are some ${input} movies: ${movies.map((m) => m.title).join(', ')}`
-              : `No ${input} movies found.`,
-            isBot: true,
-          },
-          { text: 'Anything else I can help with?', isBot: true },
-        ]);
+      try {
+        if (lastBotMessage.includes('Would you like to explore another genre?')) {
+          if (input.toLowerCase() === 'yes') {
+            setMessages((prev) => [
+              ...prev,
+              { text: 'Which genre? (e.g., Action, Comedy, Drama)', isBot: true },
+            ]);
+          } else if (input.toLowerCase() === 'no') {
+            setMessages((prev) => [
+              ...prev,
+              { text: 'Thank you for exploring movies with us! Is there anything else I can help you with?', isBot: true },
+              { text: 'Movie Suggestions', isBot: true, isButton: true },
+              { text: 'Theaters Nearby', isBot: true, isButton: true },
+            ]);
+          } else {
+            setMessages((prev) => [
+              ...prev,
+              { text: 'Please respond with Yes or No', isBot: true },
+            ]);
+          }
+        } else if (lastBotMessage.includes('Which genre?')) {
+          try {
+            console.log('Fetching movies for genre:', input);
+            const response = await axios.get(`http://localhost:9090/moviesByGenre/${input}`);
+            const movies = response.data;
+          
+          setMessages((prev) => [
+            ...prev,
+            {
+              text: `Movies in ${input} genre:`,
+              isBot: true,
+            },
+            ...movies.map(movie => ({
+              text: `• ${movie.title}`,
+              isBot: true,
+              movieId: movie.id,
+              isClickable: true
+            })),
+            { text: 'Would you like to explore another genre?', isBot: true },
+          ]);
+        } catch (error) {
+          console.error('Genre API Error:', error);
+          setMessages((prev) => [
+            ...prev,
+            { text: 'Sorry, I could not fetch movies for this genre. Please try again!', isBot: true },
+          ]);
+        }
       } else if (lastBotMessage.includes('enter a city')) {
         // ...existing city code...
         const response = await axios.get(`http://localhost:9090/api/theatres`);
@@ -340,6 +391,10 @@ const handleInputSubmit = async () => {
       ]);
     }
   };
+  const handleMovieClick = (movieId) => {
+    navigate(`/main/moviesSpecific/${movieId}`);
+    setIsOpen(false); // Optional: close chatbot after navigation
+  };
   return (
     <>
       {!isOpen && (
@@ -352,18 +407,25 @@ const handleInputSubmit = async () => {
             <CloseButton onClick={() => setIsOpen(false)}>&times;</CloseButton>
           </ChatHeader>
           <ChatArea>
-            {messages.map((msg, index) => (
-              <div key={index}>
-                {msg.isButton ? (
-                  <OptionButton onClick={() => handleButtonClick(msg.text)}>
-                    {msg.text}
-                  </OptionButton>
-                ) : (
-                  <Message $isBot={msg.isBot}>{msg.text}</Message>
-                )}
-              </div>
-            ))}
-          </ChatArea>
+        {messages.map((msg, index) => (
+          <div key={index}>
+            {msg.isButton ? (
+              <OptionButton onClick={() => handleButtonClick(msg.text)}>
+                {msg.text}
+              </OptionButton>
+            ) : msg?.isClickable ? (
+              <ClickableMessage
+                $isBot={msg.isBot}
+                onClick={() => handleMovieClick(msg.movieId)}
+              >
+                {msg.text}
+              </ClickableMessage>
+            ) : (
+              <Message $isBot={msg.isBot}>{msg.text}</Message>
+            )}
+          </div>
+        ))}
+      </ChatArea>
           <InputArea>
             <Input
               type="text"
