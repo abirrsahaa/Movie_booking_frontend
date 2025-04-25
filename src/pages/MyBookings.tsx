@@ -33,6 +33,7 @@ interface Booking {
   theatreName: string;
   movieName: string;
   movieImage: string;
+  bookingStatus: string;
 }
 
 // Refined animation variants
@@ -97,6 +98,7 @@ const MyBookings: React.FC = () => {
     try {
       setRefreshing(true);
       const response = await axios.get(`http://localhost:9090/getBooking/${userData?.id}`);
+      console.log("Bookings:", response.data);
       setBookings(response.data);
 
     } catch (error) {
@@ -253,6 +255,7 @@ const MyBookings: React.FC = () => {
   // Ticket card component
   const TicketCard: React.FC<{ booking: Booking, isActive: boolean }> = ({ booking, isActive }) => {
     const { date, time } = formatShowtime(booking.showtime);
+    console.log("Booking:", booking.bookingStatus);
 
     return (
       <motion.div
@@ -326,7 +329,7 @@ const MyBookings: React.FC = () => {
                     </motion.div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 mt-1">
+                  {booking.bookingStatus == "OWNED" && <div className="grid grid-cols-2 gap-2 mt-1">
                     <Button
                       variant="outline"
                       className="bg-white text-blue-600 border border-blue-200 hover:bg-blue-50 text-xs py-1 h-auto"
@@ -344,7 +347,7 @@ const MyBookings: React.FC = () => {
                       <XIcon className="w-3 h-3 mr-1" />
                       Cancel
                     </Button>
-                  </div>
+                  </div>}
                 </motion.div>
               )}
             </AnimatePresence>
@@ -366,7 +369,7 @@ const MyBookings: React.FC = () => {
             </Button>
           </CardFooter>
         </Card>
-      </motion.div>
+      </motion.div >
     );
   };
 
